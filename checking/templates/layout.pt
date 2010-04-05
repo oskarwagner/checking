@@ -18,14 +18,14 @@
       </div>
     </div>
     <ul id="tabs">
-      <li class="current">
+      <li>
         <a href="#">Customers</a>
       </li>
       <li>
-        <a href="#">Reports</a>
+        <a href="#">Invoices</a>
       </li>
       <li>
-        <a href="#">Invoices</a>
+        <a href="#">Reports</a>
       </li>
       <li id="home">
         <a href="#">Home</a>
