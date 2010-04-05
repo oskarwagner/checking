@@ -20,8 +20,12 @@
           <legend>General information</legend>
           <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
           <label tal:define="field form.get_field('title')">Title <sup class="required">*</sup>
-            <input class="span-5" type="text" maxlength="128" name="title" value="${field.value[0]}" /> <em
+            <input class="autofocus span-5" type="text" maxlength="128" name="title" value="${field.value[0]}" /> <em
               class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('invoice_code')">Invoice code <sup class="required">*</sup>
+            <input class="span-5" type="text" maxlength="16" name="invoice_code" value="${field.value[0]}" /> <em
+            class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
           <label tal:define="field form.get_field('ein')">EIN
             <dfn class="infoPanel" title="Information">Please enter the Employer Identification Number, alse known as Federal Tax Identification Number.</dfn>

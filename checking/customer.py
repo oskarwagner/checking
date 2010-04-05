@@ -14,6 +14,10 @@ Factory = SimpleTypeFactory(Customer)
 
 def Overview(request):
     user=currentUser(request)
+    session=meta.Session()
+    customers=session.query(Customer.title, Customer.invoice_code)\
+            .filter(Customer.account==user)\
+            .order_by(Customer.title)
 
     return render("customer_overview.pt", request,
             section="customers",

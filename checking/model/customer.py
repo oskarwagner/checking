@@ -17,6 +17,7 @@ class Customer(BaseObject):
             nullable=False)
     account = orm.relationship(Account, backref="customers")
     title = schema.Column(types.Unicode(128), nullable=False, unique=True)
+    invoice_code = schema.Column(types.String(16), nullable=False, unique=True)
     ein = schema.Column(types.String(64))
     address = schema.Column(types.UnicodeText)
     postal_code = schema.Column(types.String(16))
