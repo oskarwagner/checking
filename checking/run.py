@@ -1,17 +1,25 @@
-import transaction
-
 from repoze.bfg.configuration import Configurator
-from repoze.tm import after_end
-from repoze.tm import isActive
+from repoze.tm import TM
 
-from checking.models import DBSession
-from checking.models import setup_engine
 
-def handle_teardown(event):
-    environ = event.request.environ
-    if isActive(environ):
-        t = transaction.get()
-        after_end.register(DBSession.remove, t)
+def setupSqlalchemy(config):
+    """Setup the connection to the SQL server. The `options`
+    parameter is a dictionary with the configuration options,
+    which can include SQLAlchemy options prefixed with
+    `sqlalchemy`. At a minimum `sqlalchemy.url` must be
+    specified.
+    """
+    from zope.sqlalchemy import ZopeTransactionExtension
+    from sqlalchemy import engine_from_config
+    from sqlalchemy import orm
+    from checking.model import meta
+
+    sm = orm.sessionmaker(extension=ZopeTransactionExtension())
+    engine = engine_from_config(config, "sqlalchemy.")
+    meta.Session = orm.scoped_session(sm)
+    meta.Session.configure(bind=engine)
+
+
 
 def app(global_config, **settings):
     """ This function returns a WSGI application.
@@ -22,10 +30,13 @@ def app(global_config, **settings):
     zcml_file = settings.get('configure_zcml', 'configure.zcml')
     if not settings.get('sqlalchemy.url'):
         raise ValueError("No 'sqlalchemy.url' value in application configuration.")
-    setup_engine(settings)
+    setupSqlalchemy(settings)
     config = Configurator(settings=settings)
     config.begin()
     config.load_zcml(zcml_file)
     config.end()
-    return config.make_wsgi_app()
+    app = config.make_wsgi_app()
+    app = TM(app)
+
+
 
