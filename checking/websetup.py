@@ -11,7 +11,7 @@ def populateDatabase():
     admin=session.query(Account).filter(Account.login=="admin").first()
     if admin is None:
         log.info("Adding initial admin user")
-        admin=Account(email="admin", password="admin", firstname="Admin", surname="Admin")
+        admin=Account(email="admin", password="admin", firstname=u"Admin", surname=u"Admin")
         session.add(admin)
 
 

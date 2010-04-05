@@ -18,7 +18,7 @@ class Invoice(BaseObject):
     account_id = schema.Column(types.Integer(),
             schema.ForeignKey(Account.id, onupdate="CASCADE", ondelete="CASCADE"),
             nullable=False)
-    account = orm.relationship(Account, backref="customers")
+    account = orm.relationship(Account, backref="invoices")
     number = schema.Column(types.Integer())
     customer_id = schema.Column(types.Integer(),
             schema.ForeignKey(Customer.id, onupdate="CASCADE", ondelete="CASCADE"),
