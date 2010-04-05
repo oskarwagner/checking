@@ -28,13 +28,28 @@ def setupSqlalchemy(config):
 
 def setupRoutes(config):
     from repoze.bfg.view import append_slash_notfound_view
+    from checking.authentication import predAuthenticated
+    from checking.authentication import predAnonymous
     config.set_notfound_view(append_slash_notfound_view)
     config.set_forbidden_view(resolve("checking.authentication:Forbidden"))
     config.add_static_view("behaviour", path="templates/behaviour")
     config.add_static_view("libraries", path="templates/libraries")
     config.add_static_view("style", path="templates/style")
+    config.add_route("home", path="/", 
+            custom_predicates=(predAnonymous,),
+            view=resolve("checking.frontpage:View"))
+    config.add_route("dashboard", path="/", 
+            custom_predicates=(predAuthenticated,),
+            view=resolve("checking.dashboard:View"))
     config.add_route("login", path="/login", view=resolve("checking.authentication:Login"))
     config.add_route("logout", path="/logout", view=resolve("checking.authentication:Logout"))
+
+
+def setupChameleon(config):
+    from checking.zpt import PermissionTranslator
+    config.registry.registerUtility(
+            PermissionTranslator(),
+            name="permission")
 
 
 def app(global_config, **settings):
@@ -43,12 +58,23 @@ def app(global_config, **settings):
     It is usually called by the PasteDeploy framework during 
     ``paster serve``.
     """
+    from repoze.bfg.authentication import AuthTktAuthenticationPolicy
+    from checking.authorization import RouteAuthorizationPolicy
+    from checking.authentication import verifyUser
+
     if not settings.get("sqlalchemy.url"):
         raise ValueError("No 'sqlalchemy.url' value in application configuration.")
-    config = Configurator(settings=settings)
+    config = Configurator(settings=settings,
+            authentication_policy=AuthTktAuthenticationPolicy("secret",
+                callback=verifyUser,
+                timeout=30*60, max_age=30*60,
+                reissue_time=20*60),
+            authorization_policy=RouteAuthorizationPolicy())
     config.begin()
     setupSqlalchemy(settings)
     setupRoutes(config)
+    setupChameleon(config)
+    config.hook_zca()
     config.end()
 
     app = config.make_wsgi_app()

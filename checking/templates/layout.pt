@@ -18,17 +18,17 @@
       </div>
     </div>
     <ul id="tabs">
-      <li>
+      <li tal:condition="permission:view">
         <a href="#">Customers</a>
       </li>
-      <li>
+      <li tal:condition="permission:view">
         <a href="#">Invoices</a>
       </li>
-      <li>
+      <li tal:condition="permission:view">
         <a href="#">Reports</a>
       </li>
       <li id="home">
-        <a href="#">Home</a>
+        <a href="${tools.route_url('home')}">Home</a>
       </li>
     </ul>
     <p id="appendix">

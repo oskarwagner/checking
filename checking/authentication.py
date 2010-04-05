@@ -88,7 +88,7 @@ class Login(object):
                 if came_from:
                     response=HTTPFound(location=came_from)
                 else:
-                    response=HTTPFound(location=route_url("home", self.request))
+                    response=HTTPFound(location=route_url("dashboard", self.request))
                 loginUser(account, self.request, response)
                 return response
         
@@ -110,4 +110,21 @@ def Forbidden(request):
     return render("login.pt", request,
                 login_url=route_url("login", request),
                 form=form)
+
+
+def predAuthenticated(context, request):
+    """Route predicate to check if the user is authenticated.
+    This method can be used in the custom_predicates parameter for
+    route and view statements.
+    """
+    return currentUser(request) is not None
+
+
+
+def predAnonymous(context, request):
+    """Route predicate to check if the user is anoymous.
+    This method can be used in the custom_predicates parameter for
+    route and view statements.
+    """
+    return currentUser(request) is None
 

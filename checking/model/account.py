@@ -1,6 +1,5 @@
 from sqlalchemy import schema
 from sqlalchemy import types
-from sqlalchemy.ext.declarative import synonym_for
 from checking.model.meta import BaseObject
 
 
@@ -10,18 +9,14 @@ class Account(BaseObject):
     id = schema.Column(types.Integer(),
             schema.Sequence("account_id_seq", optional=True),
             primary_key=True, autoincrement=True)
+    login = schema.Column(types.String(32), nullable=False, unique=True)
     firstname = schema.Column(types.Unicode(32), nullable=False)
     surname = schema.Column(types.Unicode(64), nullable=False)
-    email = schema.Column(types.String(256), nullable=False, unique=True)
+    email = schema.Column(types.String(256), nullable=False)
     password = schema.Column(types.String(256), nullable=False)
 
-    @synonym_for("email")
-    @property
-    def login(self):
-        return self.email
-
     def __repr__(self):
-        return "<Account login=%s>" % self.email
+        return "<Account login=%s>" % self.login
 
     def authenticate(self, password):
         return password==self.password

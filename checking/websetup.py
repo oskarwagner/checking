@@ -11,7 +11,9 @@ def populateDatabase():
     admin=session.query(Account).filter(Account.login=="admin").first()
     if admin is None:
         log.info("Adding initial admin user")
-        admin=Account(email="admin", password="admin", firstname=u"Admin", surname=u"Admin")
+        admin=Account(login="admin", password="admin",
+                firstname=u"Admin", surname=u"Admin",
+                email="discard@simplon.biz")
         session.add(admin)
 
 

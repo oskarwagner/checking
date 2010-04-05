@@ -46,12 +46,13 @@ class Tools(object):
         return currentUser(self.request)
 
 
-def render(name, request, status_int=None, **kw):
+def render(name, request, context=None, status_int=None, **kw):
     if os.path.sep!="/":
         name=name.replace("/", os.path.sep)
     template=os.path.join("templates", name)
 
-    response=render_template_to_response(template, request=request,
+    response=render_template_to_response(template,
+                request=request, context=context,
                 tools=Tools(request),
                 formatter=formatter,
                 layout=get_template(os.path.join("templates", "layout.pt")),

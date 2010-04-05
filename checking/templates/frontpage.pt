@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout">
+  <head>
+    <metal:title fill-slot="title">Welcome</metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1>Welcome</h1>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut suscipit varius libero id vulputate. Donec at laoreet elit. Proin dictum mollis augue, vitae volutpat lorem vulputate at.</p>
+
+      <p>Donec id lacus sem, at pulvinar erat. Phasellus magna nulla, tristique in accumsan et, auctor a turpis. Nam eget quam orci, at fringilla lorem. Nulla porta ullamcorper diam, varius ultricies tellus scelerisque sed.</p>
+
+      <blockquote>
+        <p>Checking takes all the effort out of doing invoicing. - John Doe</p>
+      </blockquote>
+
+      <form method="POST" action="${login_url}">
+        <fieldset class="concise">
+          <label>Login
+            <input type="text" length="80" name="login"/>
+          </label>
+          <label>Password
+            <input type="password" length="80" name="password"/>
+          </label>
+        </fieldset>
+
+        <div class="buttonBar">
+          <button type="submit" class="defaultButton">Meld aan</button>
+        </div>
+      </form>
+
+      <p>No account yet? <a href="#">Sign up now!</a></p>
+    </metal:content>
+  </body>
+</html>
+
