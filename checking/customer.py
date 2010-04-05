@@ -1,11 +1,15 @@
 from webob.exc import HTTPFound
 import formish
+from sqlalchemy import sql
+from sqlalchemy import func
 from repoze.bfg.url import route_url
 from checking import form
 from checking.utils import render
 from checking.utils import SimpleTypeFactory
 from checking.authentication import currentUser
 from checking.model.customer import Customer
+from checking.model.invoice import Invoice
+from checking.model.invoice import InvoiceEntry
 from checking.model import meta
 
 
@@ -87,7 +91,26 @@ class Edit(object):
 
 
 def View(context, request):
+    session=meta.Session()
+    query=sql.select([Invoice.id, Invoice.number, Invoice.sent, Invoice.due, Invoice.paid,
+                      sql.select([func.sum(InvoiceEntry.standardised_amount)],
+                                 InvoiceEntry.invoice_id==Invoice.id).label("amount")],
+                      Invoice.customer_id==context.id)\
+            .group_by(Invoice.id)\
+            .order_by(Invoice.sent.desc())\
+            .limit(10)
+
+    invoices=[dict(id=row.id,
+                   number=row.number,
+                   sent=row.sent,
+                   due=row.due,
+                   paid=row.paid,
+                   amount=row.amount or 0,
+                   url=route_url("invoice_view", request, id=row.id))
+               for row in session.query(query)]
+
     return render("customer_view.pt", request, context,
             section="customers",
+            invoices=invoices,
             edit_url=route_url("customer_edit", request, id=context.id))
 

@@ -23,9 +23,10 @@ class Invoice(BaseObject):
     customer_id = schema.Column(types.Integer(),
             schema.ForeignKey(Customer.id, onupdate="CASCADE", ondelete="CASCADE"),
             nullable=False)
-    customer = orm.relationship(Customer)
-    sent = schema.Column(types.DateTime())
-    paid = schema.Column(types.DateTime())
+    customer = orm.relationship(Customer, backref="invoices")
+    sent = schema.Column(types.Date())
+    due = schema.Column(types.Date())
+    paid = schema.Column(types.Date())
     note = schema.Column(types.UnicodeText())
 
 

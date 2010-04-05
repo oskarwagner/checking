@@ -11,6 +11,30 @@
     <metal:content fill-slot="content">
       <h1>${context.title}</h1>
 
+      <h2>Invoices</h2>
+
+      <p tal:condition="not invoices">
+        There are no invoices for this customer.
+      </p>
+
+      <table tal:condition="invoices">
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Amount</th>
+            <th>Sent on</th>
+            <th>Paid on</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr tal:repeat="invoice invoices">
+            <td><a href="${invoice.url}"><tal:span condition="invoice.number">${invoice.number}</tal:span><tal:span condition="not invoice.number">Pending</tal:span></a></td>
+            <td>${formatter.decimal(invoice.amount)}</td>
+            <td><tal:span condition="invoice.sent">${formatter.date(invoice.sent)}</tal:span><tal:span condition="not invoice.sent">Unsent</tal:span></td>
+            <td><tal:span condition="invoice.paid">${formatter.date(invoice.paid)}</tal:span><tal:span condition="not invoice.paid">Unpaid</tal:span></td>
+          </tr>
+        </tbody>
+      </table>
     </metal:content>
     <metal:portlets fill-slot="portlets">
       <div id="portlets">

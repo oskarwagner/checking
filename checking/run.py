@@ -48,10 +48,16 @@ def setupRoutes(config):
     config.add_route("customers", path="/customers", view=resolve("checking.customer:Overview"))
     config.add_route("customer_add", path="/customers/add", view=resolve("checking.customer:Add"))
     config.add_route("customer_edit", path="/customers/:id/edit",
-            factory=factory, view=resolve("checking.customer:Edit"))
+            factory=factory, view=resolve("checking.customer:Edit"),
+            permission="edit")
     config.add_route("customer_view", path="/customers/:id",
-            factory=factory, view=resolve("checking.customer:View"))
+            factory=factory, view=resolve("checking.customer:View"),
+            permission="view")
 
+#    factory=resolve("checking.customer:Factory")
+    config.add_route("invoice_view", path="/invoices/:id",
+#            factory=factory, view=resolve("checking.customer:View"),
+            permission="view")
 
 def setupChameleon(config):
     from checking.zpt import PermissionTranslator
