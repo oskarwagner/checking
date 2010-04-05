@@ -44,6 +44,9 @@ def setupRoutes(config):
     config.add_route("login", path="/login", view=resolve("checking.authentication:Login"))
     config.add_route("logout", path="/logout", view=resolve("checking.authentication:Logout"))
 
+    config.add_route("customers", path="/customers", view=resolve("checking.customer:Overview"))
+    config.add_route("customer_add", path="/customers/add", view=resolve("checking.customer:Add"))
+
 
 def setupChameleon(config):
     from checking.zpt import PermissionTranslator

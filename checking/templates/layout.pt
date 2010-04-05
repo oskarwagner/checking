@@ -17,20 +17,23 @@
         <metal:content define-slot="content"/>
       </div>
     </div>
-    <ul id="tabs">
-      <li tal:condition="permission:view">
-        <a href="#">Customers</a>
-      </li>
-      <li tal:condition="permission:view">
-        <a href="#">Invoices</a>
-      </li>
-      <li tal:condition="permission:view">
-        <a href="#">Reports</a>
-      </li>
+    <ul id="tabs" tal:define="section getattr(view, 'section', None)">
+      <tal:block condition="permission:view">
+        <li class="${'current' if section=='customers' else None}">
+          <a href="${tools.route_url('customers')}">Customers</a>
+        </li>
+        <li class="${'current' if section=='invoices' else None}">
+          <a href="#">Invoices</a>
+        </li>
+        <li class="${'current' if section=='reports' else None}">
+          <a href="#">Reports</a>
+        </li>
+      </tal:block>
       <li id="home">
         <a href="${tools.route_url('home')}">Home</a>
       </li>
     </ul>
+    <metal:portlets define-slot="portlets"/>
     <p id="appendix">
       Code by <a href="http://simplon.biz/">Simplon</a> | Design by <a href="http://www.cornae.com">Cornae</a>
     </p>

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout">
+  <head>
+    <metal:title fill-slot="title">Customers</metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1>Customers</h1>
+
+      <div class="message notice" tal:condition="not customers">
+        <p>You have not added any customers.
+        </p>
+      </div>
+    </metal:content>
+    <metal:portlets fill-slot="portlets">
+      <div id="portlets">
+        <div class="portlet contextual">
+          <h3>Actions</h3>
+          <div class="portletContent">
+            <ul>
+              <li><a href="#">Add new customer</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </metal:portlets>
+  </body>
+</html>
+

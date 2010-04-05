@@ -46,13 +46,14 @@ class Tools(object):
         return currentUser(self.request)
 
 
-def render(name, request, context=None, status_int=None, **kw):
+
+def render(name, request, context=None, status_int=None, view=None, **kw):
     if os.path.sep!="/":
         name=name.replace("/", os.path.sep)
     template=os.path.join("templates", name)
 
     response=render_template_to_response(template,
-                request=request, context=context,
+                request=request, context=context, view=view,
                 tools=Tools(request),
                 formatter=formatter,
                 layout=get_template(os.path.join("templates", "layout.pt")),
@@ -60,5 +61,6 @@ def render(name, request, context=None, status_int=None, **kw):
     if status_int is not None:
         response.status_int=status_int
     return response
+
 
 
