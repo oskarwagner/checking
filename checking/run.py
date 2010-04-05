@@ -1,5 +1,10 @@
+import pkg_resources
 from repoze.bfg.configuration import Configurator
 from repoze.tm import TM
+
+
+def resolve(name):
+    return pkg_resources.EntryPoint.parse("x=%s" % name).load(False)
 
 
 def setupSqlalchemy(config):
@@ -20,6 +25,14 @@ def setupSqlalchemy(config):
     meta.Session.configure(bind=engine)
 
 
+def setupRoutes(config):
+    from repoze.bfg.view import append_slash_notfound_view
+    config.set_notfound_view(append_slash_notfound_view)
+    config.set_forbidden_view(resolve("checking.authentication:Forbidden"))
+    config.add_static_view("static", path="templates/static")
+    config.add_route("login", path="/login", view=resolve("checking.authentication:Login"))
+    config.add_route("logout", path="/logout", view=resolve("checking.authentication:Logout"))
+
 
 def app(global_config, **settings):
     """ This function returns a WSGI application.
@@ -30,13 +43,16 @@ def app(global_config, **settings):
     zcml_file = settings.get('configure_zcml', 'configure.zcml')
     if not settings.get('sqlalchemy.url'):
         raise ValueError("No 'sqlalchemy.url' value in application configuration.")
-    setupSqlalchemy(settings)
     config = Configurator(settings=settings)
     config.begin()
-    config.load_zcml(zcml_file)
+    setupSqlalchemy(settings)
+    setupRoutes(config)
     config.end()
+
     app = config.make_wsgi_app()
     app = TM(app)
+
+    return app
 
 
 
