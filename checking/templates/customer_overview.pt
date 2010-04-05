@@ -15,6 +15,21 @@
         <p>You have not added any customers.
         </p>
       </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Invoice code</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr tal:repeat="customer customers">
+            <td><a href="${customer.url}">${customer.title}</a></td>
+            <td>${customer.invoice_code}</td>
+          </tr>
+        </tbody>
+      </table>
     </metal:content>
     <metal:portlets fill-slot="portlets">
       <div id="portlets">
@@ -30,4 +45,3 @@
     </metal:portlets>
   </body>
 </html>
-

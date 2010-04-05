@@ -1,6 +1,7 @@
 from sqlalchemy import orm
 from sqlalchemy import schema
 from sqlalchemy import types
+from repoze.bfg import security
 from checking.model.meta import BaseObject
 from checking.model.account import Account
 
@@ -29,4 +30,9 @@ class Customer(BaseObject):
 
     def __repr__(self):
         return "<Currency %s rate=%.2f>" % (self.code, self.rate)
+
+
+    @orm.reconstructor
+    def _add_acls(self):
+        self.__acl__ = [(security.Allow, self.account_id, ["view", "edit"]) ]
 

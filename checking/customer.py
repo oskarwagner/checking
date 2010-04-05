@@ -15,13 +15,17 @@ Factory = SimpleTypeFactory(Customer)
 def Overview(request):
     user=currentUser(request)
     session=meta.Session()
-    customers=session.query(Customer.title, Customer.invoice_code)\
+    customers=session.query(Customer.id, Customer.title, Customer.invoice_code)\
             .filter(Customer.account==user)\
             .order_by(Customer.title)
-
+    customers=[dict(id=row.id,
+                    title=row.title,
+                    invoice_code=row.invoice_code,
+                    url=route_url("customer_view", request, id=row.id))
+               for row in customers]
     return render("customer_overview.pt", request,
             section="customers",
-            customers=[])
+            customers=customers)
 
 
 class Add(object):

@@ -12,6 +12,18 @@
       <h1>${context.title}</h1>
 
     </metal:content>
+    <metal:portlets fill-slot="portlets">
+      <div id="portlets">
+        <div class="portlet contextual">
+          <h3>Actions</h3>
+          <div class="portletContent">
+            <ul>
+              <li tal:condition="permission:edit"><a href="${tools.route_url('customer_edit', id=context.id)}">Modify</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </metal:portlets>
   </body>
 </html>
 
