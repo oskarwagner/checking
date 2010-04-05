@@ -8,7 +8,7 @@ class Account(BaseObject):
     __tablename__ = "account"
 
     id = schema.Column(types.Integer(),
-            types.Sequence("account_id_seq", optional=True),
+            schema.Sequence("account_id_seq", optional=True),
             primary_key=True, autoincrement=True)
     firstname = schema.Column(types.Unicode(32), nullable=False)
     surname = schema.Column(types.Unicode(64), nullable=False)

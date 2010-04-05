@@ -12,7 +12,7 @@ class Invoice(BaseObject):
     __tablename__ = "invoice"
 
     id = schema.Column(types.Integer(),
-            types.Sequence("invoice_id_seq", optional=True),
+            schema.Sequence("invoice_id_seq", optional=True),
             primary_key=True, autoincrement=True)
     number = schema.Column(types.Integer())
     customer_id = schema.Column(types.Integer(),
@@ -28,7 +28,7 @@ class InvoiceEntry(BaseObject):
     __tablename__ = "invoice_entry"
 
     id = schema.Column(types.Integer(),
-            types.Sequence("invoice_entry_id_seq", optional=True),
+            schema.Sequence("invoice_entry_id_seq", optional=True),
             primary_key=True, autoincrement=True)
     position = schema.Column(types.Integer(), default=0)
     invoice_id = schema.Column(types.Integer(),
@@ -49,7 +49,7 @@ class InvoiceNote(BaseObject):
     __tablename__ = "invoice_note"
 
     id = schema.Column(types.Integer(),
-            types.Sequence("invoice_note_id_seq", optional=True),
+            schema.Sequence("invoice_note_id_seq", optional=True),
             primary_key=True, autoincrement=True)
     posted = schema.Column(types.DateTime(), nullable=False,
             default=functions.now())

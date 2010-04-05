@@ -8,7 +8,7 @@ class Customer(BaseObject):
     __tablename__ = "customer"
 
     id = schema.Column(types.Integer(),
-            types.Sequence("customer_id_seq", optional=True),
+            schema.Sequence("customer_id_seq", optional=True),
             primary_key=True, autoincrement=True)
     title = schema.Column(types.Unicode(128), nullable=False, unique=True)
     ein = schema.Column(types.String(64))
