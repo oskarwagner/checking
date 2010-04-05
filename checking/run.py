@@ -43,8 +43,7 @@ def app(global_config, **settings):
     It is usually called by the PasteDeploy framework during 
     ``paster serve``.
     """
-    zcml_file = settings.get('configure_zcml', 'configure.zcml')
-    if not settings.get('sqlalchemy.url'):
+    if not settings.get("sqlalchemy.url"):
         raise ValueError("No 'sqlalchemy.url' value in application configuration.")
     config = Configurator(settings=settings)
     config.begin()
