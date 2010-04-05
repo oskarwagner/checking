@@ -1,6 +1,8 @@
+from sqlalchemy import orm
 from sqlalchemy import schema
 from sqlalchemy import types
 from checking.model.meta import BaseObject
+from checking.model.account import Account
 
 class Customer(BaseObject):
     """A customer
@@ -10,6 +12,10 @@ class Customer(BaseObject):
     id = schema.Column(types.Integer(),
             schema.Sequence("customer_id_seq", optional=True),
             primary_key=True, autoincrement=True)
+    account_id = schema.Column(types.Integer(),
+            schema.ForeignKey(Account.id, onupdate="CASCADE", ondelete="CASCADE"),
+            nullable=False)
+    account = orm.relationship(Account, backref="customers")
     title = schema.Column(types.Unicode(128), nullable=False, unique=True)
     ein = schema.Column(types.String(64))
     address = schema.Column(types.UnicodeText)

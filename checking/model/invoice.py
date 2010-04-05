@@ -3,6 +3,7 @@ from sqlalchemy import schema
 from sqlalchemy import types
 from sqlalchemy.sql import functions
 from checking.model.meta import BaseObject
+from checking.model.account import Account
 from checking.model.currency import Currency
 from checking.model.customer import Customer
 
@@ -14,6 +15,10 @@ class Invoice(BaseObject):
     id = schema.Column(types.Integer(),
             schema.Sequence("invoice_id_seq", optional=True),
             primary_key=True, autoincrement=True)
+    account_id = schema.Column(types.Integer(),
+            schema.ForeignKey(Account.id, onupdate="CASCADE", ondelete="CASCADE"),
+            nullable=False)
+    account = orm.relationship(Account, backref="customers")
     number = schema.Column(types.Integer())
     customer_id = schema.Column(types.Integer(),
             schema.ForeignKey(Customer.id, onupdate="CASCADE", ondelete="CASCADE"),
