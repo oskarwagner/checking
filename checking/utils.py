@@ -1,5 +1,5 @@
-import re
 import os.path
+import random
 import pytz
 import babel
 import babel.support
@@ -13,37 +13,44 @@ locale = babel.Locale("nl", "NL")
 formatter = babel.support.Format(locale, timezone)
 
 
-def normalizeForUrl(input):
-    normalizers = [
-            ( re.compile(r"[ \\|/\(\)\[\]]"), "-"),
-            ( re.compile(r"&"), "+" ),
-            ( re.compile("-{2,}"), "-" ),
-            ]
-    output = input.lower()
-    for (pattern, sub) in normalizers:
-        output = pattern.sub(sub, output)
-    return output
+def randomString(length=32):
+    """Return 32 bytes of random data. Only characters which do not require
+    special escaping in HTML are generated."""
+
+    safe_characters = "abcdefghijklmnopqrstuvwxyz" \
+                      "ABCDEFGHIJKLMNOPQRSTUVWXYZ" \
+                      "1234567890-/+"
+    output = []
+    append = output.append
+    for i in xrange(length):
+        append(random.choice(safe_characters))
+    return "".join(output)
+
 
 
 class Tools(object):
-    debug = True
-
     def __init__(self, request):
+        from checking.authentication import currentUser
         self.request=request
+        self.user=currentUser(request)
 
-    def normalize(self, input):
-        return normalizeForUrl(input)
+    @property
+    def csrf_token(self):
+        """Return a CSRF token. For authenticated users this should be included
+        in all forms under the name `csrf_token`."""
+        if self.user is None:
+            return None
+        return self.user.secret
 
     def static_url(self, resource, **kw):
+        """Generate a URL for a static resources. `path` is a filesystem path
+        to the source, relatives to the `templates` directory.
+        """
+
         return static_url("templates/%s" % resource, self.request, **kw)
 
     def route_url(self, name, *args, **kw):
         return route_url(name, self.request, *args, **kw)
-
-    @property
-    def current_user(self):
-        from checking.authentication import currentUser
-        return currentUser(self.request)
 
 
 
@@ -61,6 +68,5 @@ def render(name, request, context=None, status_int=None, view=None, **kw):
     if status_int is not None:
         response.status_int=status_int
     return response
-
 
 

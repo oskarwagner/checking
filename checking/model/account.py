@@ -1,5 +1,8 @@
+from sqlalchemy import orm
 from sqlalchemy import schema
 from sqlalchemy import types
+from repoze.bfg import security
+from checking.utils import randomString
 from checking.model.meta import BaseObject
 
 
@@ -14,6 +17,7 @@ class Account(BaseObject):
     surname = schema.Column(types.Unicode(64), nullable=False)
     email = schema.Column(types.String(256), nullable=False)
     password = schema.Column(types.String(256), nullable=False)
+    secret = schema.Column(types.String(32))
 
     def __repr__(self):
         return "<Account login=%s>" % self.login
@@ -23,5 +27,29 @@ class Account(BaseObject):
 
     @property
     def title(self):
-        return u"%s %s" % (self.firstname, self.surname)
+        """Return the title for this user. This is the full name of the user as
+        should be used in the user interface.
+        """
+        if self.firstname and self.surname:
+            return u"%s %s" % (self.firstname, self.surname)
+        elif self.firstname:
+            return self.firstname
+        elif self.surname:
+            return self.surname
+        else:
+            return self.login
+
+
+    def processLogin(self):
+        """Perform any tasks associated with a login. This will update the
+        CSRF secret and log the login.
+
+        .. todo:: login logging is not implemented yet
+        """
+        self.secret = randomString(32)
+
+
+    @orm.reconstructor
+    def _add_acls(self):
+        self.__acl__ = [(security.Allow, self.id, ["view", "edit"]) ]
 

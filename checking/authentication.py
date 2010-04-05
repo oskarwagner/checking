@@ -29,6 +29,7 @@ def loginUser(account, request, response):
     """Start a login session for a user. This will update the response to
     set a cookie which authenticates the user on future requests.
     """
+    account.processLogin()
     policy=request.registry.getUtility(IAuthenticationPolicy)
     headers=policy.remember(request, account.id)
     response.headers.update(headers)
