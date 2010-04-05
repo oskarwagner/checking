@@ -23,6 +23,7 @@ def setupSqlalchemy(config):
     engine = engine_from_config(config, "sqlalchemy.")
     meta.Session = orm.scoped_session(sm)
     meta.Session.configure(bind=engine)
+    meta.metadata.bind=engine
 
 
 def setupRoutes(config):
