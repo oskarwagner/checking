@@ -13,7 +13,7 @@
   <body>
     <metal:content fill-slot="content">
       <h1 tal:condition="context is None">Add new customer</h1>
-      <h1 tal:condition="context is not None">Modify ${context.title}</h1>
+      <h1 tal:condition="context is not None">Modify “${context.title}”</h1>
 
       <form class="concise" method="post" action="${action_url}" tal:define="form view.form">
         <fieldset>
