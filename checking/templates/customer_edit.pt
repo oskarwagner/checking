@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout">
+  <head>
+    <metal:title fill-slot="title">
+      <tal:span condition="context is None">Add Customer</tal:span>
+      <tal:span condition="context is not None">${context.title} — Customers</tal:span>
+    </metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1 tal:condition="context is None">Add new customer</h1>
+      <h1 tal:condition="context is not None">Modify ${context.title}</h1>
+
+      <form class="concise" method="post" action="${action_url}" tal:define="form view.form">
+        <fieldset>
+          <legend>General information</legend>
+          <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
+          <label tal:define="field form.get_field('title')">Title <sup class="required">*</sup>
+            <input class="span-5" type="text" maxlength="128" name="title" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('ein')">EIN
+            <dfn class="infoPanel" title="Information">Please enter the Employer Identification Number, alse known as Federal Tax Identification Number.</dfn>
+            <input class="span-5" type="text" maxlength="64" name="ein" value="${field.value[0]}" /> <em
+            class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Address</legend>
+          <label tal:define="field form.get_field('address')">Address
+            <textarea class="span-5" rows="3" cols="35"  name="address">${field.value[0]}</textarea> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('postal_code')">Postal code
+            <input class="span-5" type="text" maxlength="16" name="address" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('city')">City
+            <input class="span-5" type="text" maxlength="64" name="address" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Contact details</legend>
+          <label tal:define="field form.get_field('contact_name')">Name
+            <input class="span-5" type="text" maxlength="64" name="contact_name" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('contact_email')">Email address
+            <input class="span-5" type="text" maxlength="64" name="contact_email" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('contact_phone')">Telephone
+            <input class="span-5" type="text" maxlength="32" name="contact_phone" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+        </fieldset>
+
+        <div class="buttonBar">
+          <button type="submit" name="action" value="save">Save</button>
+          <button type="submit" name="action" value="cancel">Cancel</button>
+        </div>
+      </form>
+
+    </metal:content>
+  </body>
+</html>
+

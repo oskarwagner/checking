@@ -20,7 +20,7 @@ class Customer(BaseObject):
     ein = schema.Column(types.String(64))
     address = schema.Column(types.UnicodeText)
     postal_code = schema.Column(types.String(16))
-    city = schema.Column(types.Unicode(16))
+    city = schema.Column(types.Unicode(64))
     country = schema.Column(types.String(3))
     contact_name = schema.Column(types.Unicode(64))
     contact_email = schema.Column(types.String(64))

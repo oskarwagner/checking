@@ -17,7 +17,7 @@
         <metal:content define-slot="content"/>
       </div>
     </div>
-    <ul id="tabs" tal:define="section getattr(view, 'section', None)">
+    <ul id="tabs">
       <tal:block condition="permission:view">
         <li class="${'current' if section=='customers' else None}">
           <a href="${tools.route_url('customers')}">Customers</a>

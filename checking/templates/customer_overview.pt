@@ -22,7 +22,7 @@
           <h3>Actions</h3>
           <div class="portletContent">
             <ul>
-              <li><a href="#">Add new customer</a></li>
+              <li><a href="${tools.route_url('customer_add')}">Add new customer</a></li>
             </ul>
           </div>
         </div>
