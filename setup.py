@@ -25,7 +25,7 @@ setup(name="checking",
       test_suite="checking",
       install_requires = [
           "repoze.bfg",
-          "SQLAlchemy",
+          "SQLAlchemy >=0.6beta3",
           "transaction",
           "repoze.tm2",
           "zope.sqlalchemy",
