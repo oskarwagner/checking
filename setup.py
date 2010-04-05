@@ -30,6 +30,10 @@ setup(name="checking",
           "repoze.tm2",
           "zope.sqlalchemy",
           "Babel",
+          "pytz",
+          "formish",
+          "schemaish",
+          "validatish",
           ],
       entry_points = """\
       [paste.app_factory]
