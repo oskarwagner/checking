@@ -11,6 +11,29 @@
     <metal:content fill-slot="content">
       <h1>${context.title}</h1>
 
+      <dl class="grid">
+        <tal:block condition="context.ein">
+          <dt>EIN</dt>
+          <dd>${context.ein}</dd>
+        </tal:block>
+        <tal:block condition="context.address">
+          <dt>Address</dt>
+          <dd><address>
+            ${context.address}
+            ${context.postal_code} ${context.city}
+            ${context.country}
+          </address>
+          </dd>
+        </tal:block>
+        <tal:block condition="context.contact_name">
+          <dt>Contact</dt>
+          <dd>${context.contact_name}
+            <tal:span condition="context.contact_email"><br/><a href="mailto:${context.contact_email}">${context.contact_email}</a></tal:span>
+            <tal:span condition="context.contact_phone"><br/>${context.contact_phone}</tal:span>
+          </dd>
+        </tal:block>
+      </dl>
+
       <h2>Invoices</h2>
 
       <p tal:condition="not invoices">
@@ -43,6 +66,7 @@
           <div class="portletContent">
             <ul>
               <li tal:condition="permission:edit"><a href="${tools.route_url('customer_edit', id=context.id)}">Modify</a></li>
+              <li tal:condition="permission:add-invoice"><a href="#">New invoice</a></li>
             </ul>
           </div>
         </div>

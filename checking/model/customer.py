@@ -34,5 +34,5 @@ class Customer(BaseObject):
 
     @orm.reconstructor
     def _add_acls(self):
-        self.__acl__ = [(security.Allow, self.account_id, ["view", "edit"]) ]
+        self.__acl__ = [(security.Allow, self.account_id, ["view", "edit", "add-invoice"]) ]
 

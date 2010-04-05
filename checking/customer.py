@@ -77,6 +77,8 @@ class Edit(object):
         for (key,value) in data.items():
             setattr(self.context, key, value)
 
+        return True
+
 
     def __call__(self):
         if self.request.method=="POST":
