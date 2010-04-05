@@ -1,0 +1,14 @@
+[DEFAULT]
+debug = true
+
+[app:main]
+use = egg:checking#app
+reload_templates = true
+debug_authorization = false
+debug_notfound = false
+sqlalchemy.url = sqlite:///%(here)s/checking.db
+
+[server:main]
+use = egg:Paste#http
+host = 127.0.0.1
+port = 5000

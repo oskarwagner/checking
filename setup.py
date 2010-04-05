@@ -40,6 +40,6 @@ setup(name="checking",
       app = checking.run:app
 
       [paste.app_install]
-      app = repoze.bfg.paster:AppInstaller
+      app = paste.script.appinstall:Installer
       """
       )
