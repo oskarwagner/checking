@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout">
+  <head>
+    <metal:title fill-slot="title">Login</metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1>Login</h1>
+      <form method="POST">
+        <fieldset class="concise">
+          <label tal:define="field form.get_field('login')">Login
+            <input type="text" length="80" name="login" value="${field.value[0]}"/>
+            <em class="error" tal:condition="field.error">${field.error}</em>
+          </label>
+
+          <label tal:define="field form.get_field('password')">Wachtwoord
+            <input type="password" length="80" name="password"/>
+            <em class="error" tal:condition="field.error">${field.error}</em>
+          </label>
+        </fieldset>
+
+        <div class="buttonBar">
+          <button type="submit" class="defaultButton">Meld aan</button>
+        </div>
+      </form>
+    </metal:content>
+  </body>
+</html>
+

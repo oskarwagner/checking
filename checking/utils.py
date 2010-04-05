@@ -35,7 +35,7 @@ class Tools(object):
         return normalizeForUrl(input)
 
     def static_url(self, resource, **kw):
-        return static_url("templates/static/%s" % resource, self.request, **kw)
+        return static_url("templates/%s" % resource, self.request, **kw)
 
     def route_url(self, name, *args, **kw):
         return route_url(name, self.request, *args, **kw)
@@ -55,7 +55,6 @@ def render(name, request, status_int=None, **kw):
                 tools=Tools(request),
                 formatter=formatter,
                 layout=get_template(os.path.join("templates", "layout.pt")),
-                snippets=get_template(os.path.join("templates", "snippets.pt")),
                 **kw)
     if status_int is not None:
         response.status_int=status_int

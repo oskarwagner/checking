@@ -29,7 +29,9 @@ def setupRoutes(config):
     from repoze.bfg.view import append_slash_notfound_view
     config.set_notfound_view(append_slash_notfound_view)
     config.set_forbidden_view(resolve("checking.authentication:Forbidden"))
-    config.add_static_view("static", path="templates/static")
+    config.add_static_view("behaviour", path="templates/behaviour")
+    config.add_static_view("libraries", path="templates/libraries")
+    config.add_static_view("style", path="templates/style")
     config.add_route("login", path="/login", view=resolve("checking.authentication:Login"))
     config.add_route("logout", path="/logout", view=resolve("checking.authentication:Logout"))
 

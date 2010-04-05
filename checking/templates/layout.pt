@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title><metal:title define-slot="title">Login</metal:title> — Checking</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base.css')}" />
+    <!--[if lte IE 6]> <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base-ie6.css')}" /> <![endif]-->
+    <!--[if IE 7]> <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base-ie7.css')}" /> <![endif]-->
+    <!--[if IE 8]> <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base-ie8.css')}" /> <![endif]-->
+  </head>
+  <body>
+    <div id="content">
+      <div id="mainContent">
+        <metal:content define-slot="content"/>
+      </div>
+    </div>
+    <ul id="tabs">
+      <li class="current">
+        <a href="#">Customers</a>
+      </li>
+      <li>
+        <a href="#">Reports</a>
+      </li>
+      <li>
+        <a href="#">Invoices</a>
+      </li>
+      <li id="home">
+        <a href="#">Home</a>
+      </li>
+    </ul>
+    <p id="appendix">
+      Code by <a href="http://simplon.biz/">Simplon</a> | Design by <a href="http://www.cornae.com">Cornae</a>
+    </p>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.jquerytools.org/1.1.2/tiny/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="${tools.static_url('libraries/css_browser_selector.js')}"> </script>
+    <script type="text/javascript" src="${tools.static_url('behaviour/behaviour.js')}"></script>
+  </body>
+</html>
