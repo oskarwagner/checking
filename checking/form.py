@@ -1,11 +1,37 @@
 import logging
 from validatish import validator
+from validatish.error import Invalid
 import formish
 import schemaish
 import sqlalchemy.types
 from checking.authentication import currentUser
+from checking.model import meta
+from checking.model.account import Account
 
 log = logging.getLogger(__name__)
+
+
+class AvailableLogin(validator.Validator):
+    """Check if a login name is available."""
+    msg = u"This login is already in use."
+
+    def __call__(self, v):
+        if v is None:
+            return
+
+        query=meta.Session.query(Account.id).filter(Account.login==v)
+        if query.count():
+            raise Invalid(self.msg, validator=self)
+
+
+class MustAgree(validator.Required):
+    """This is a stronger version of the standard `Required` validator.
+    """
+    msg = u"You must agree to the terms and conditions."
+
+    def __call__(self, v):
+        if not v:
+            raise Invalid(self.msg, validator=self)
 
 
 class Form(formish.Form):

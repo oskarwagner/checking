@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout">
+  <head>
+    <metal:title fill-slot="title">Signup</metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1>Signup</h1>
+
+      <form class="concise" method="post" action="${action_url}" tal:define="form view.form">
+        <fieldset>
+          <legend>Account information</legend>
+
+          <label tal:define="field form.get_field('login')">Login <sup class="required">*</sup>
+            <input class="autofocus span-5" type="text" maxlength="32" name="login" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('password')">Password <sup class="required">*</sup>
+            <input class="autofocus span-5" type="password" maxlength="32" name="password.input" /> <em
+            class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label>Confirm password <sup class="required">*</sup>
+            <input class="autofocus span-5" type="password" maxlength="32" name="password.confirm" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Personal information</legend>
+          <label tal:define="field form.get_field('firstname')">Firstname
+            <input class="span-5" type="text" maxlength="32" name="firstname" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('surname')">Surname
+            <input class="span-5" type="text" maxlength="64" name="surname" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('email')">Email address <sup class="required">*</sup>
+            <input class="span-5" type="text" maxlength="256" name="email" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+        </fieldset>
+
+        <fieldset class="comprehensive">
+          <legend>Terms</legend>
+          <label tal:define="field form.get_field('terms')">I agree to the terms and conditions <sup class="required">*</sup>
+            <input type="checkbox" name="terms" value="True"/> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+        </fieldset>
+
+        <div class="buttonBar">
+          <button type="submit" name="action" value="save">Signup</button>
+          <button type="submit" name="action" value="cancel">Cancel</button>
+        </div>
+      </form>
+    </metal:content>
+  </body>
+</html>
+
