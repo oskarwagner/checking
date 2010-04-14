@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout"
+      tal:define="">
+  <head>
+    <metal:title fill-slot="title">Draft invoice — ${context.customer.title} — Customers</metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1>Invoice ${context.number}</h1>
+
+      <form method="post">
+        <fieldset class="concise">
+          <label>Payment term
+            <input type="text" maxlength="2" name="payment_term"/></label>
+        </fieldset>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody class="orderable">
+            <tr tal:repeat="entry context.entries">
+              <td><textarea rows="2" cols="45">${entry.description}</textarea></td>
+              <td><select><option>EUR</option><option>USD</option></select>
+                <input type="text" size="6" value="${entry.amount}"/></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Total</th>
+              <th class="currency">${formatter.currency(0.00, 'EUR')}</th>
+            </tr>
+          </tfoot>
+        </table>
+      </form>
+    </metal:content>
+    <script type="text/javascript" metal:fill-slot="scripts">
+      $(document).ready(function() {
+          $(".orderable").sortable({axis: "y"});
+      });
+    </script>
+  </body>
+</html>
+

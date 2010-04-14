@@ -22,7 +22,7 @@ class Invoice(BaseObject):
             nullable=False)
     customer = orm.relationship(Customer, backref="invoices")
     sent = schema.Column(types.Date())
-    due = schema.Column(types.Date())
+    payment_term = schema.Column(types.Integer(), nullable=False, default=30)
     paid = schema.Column(types.Date())
     note = schema.Column(types.UnicodeText())
 
