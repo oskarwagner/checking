@@ -56,11 +56,16 @@ def setupRoutes(config):
     config.add_route("customer_view", path="/customers/:id",
             factory=factory, view=resolve("checking.customer:View"),
             permission="view")
+    config.add_route("customer_add_invoice", path="/customers/:id/add-invoice",
+            factory=factory, view=resolve("checking.customer:AddInvoice"),
+            permission="add-invoice")
 
-#    factory=resolve("checking.customer:Factory")
+    factory=resolve("checking.invoice:Factory")
     config.add_route("invoice_view", path="/invoices/:id",
-#            factory=factory, view=resolve("checking.customer:View"),
+            factory=factory, view=resolve("checking.invoice:View"),
             permission="view")
+
+
 
 def setupChameleon(config):
     from checking.zpt import PermissionTranslator

@@ -2,10 +2,11 @@ from sqlalchemy import orm
 from sqlalchemy import schema
 from sqlalchemy import types
 from sqlalchemy.sql import functions
+from repoze.bfg import security
 from checking.model.meta import BaseObject
-from checking.model.account import Account
 from checking.model.currency import Currency
 from checking.model.customer import Customer
+
 
 class Invoice(BaseObject):
     """An invoice."""
@@ -15,10 +16,6 @@ class Invoice(BaseObject):
     id = schema.Column(types.Integer(),
             schema.Sequence("invoice_id_seq", optional=True),
             primary_key=True, autoincrement=True)
-    account_id = schema.Column(types.Integer(),
-            schema.ForeignKey(Account.id, onupdate="CASCADE", ondelete="CASCADE"),
-            nullable=False)
-    account = orm.relationship(Account, backref="invoices")
     number = schema.Column(types.Integer())
     customer_id = schema.Column(types.Integer(),
             schema.ForeignKey(Customer.id, onupdate="CASCADE", ondelete="CASCADE"),
@@ -28,6 +25,15 @@ class Invoice(BaseObject):
     due = schema.Column(types.Date())
     paid = schema.Column(types.Date())
     note = schema.Column(types.UnicodeText())
+
+    @orm.reconstructor
+    def _add_acls(self):
+        account_id=self.customer.account_id
+        self.__acl__=[(security.Allow, account_id, "view")]
+        if not self.sent:
+            self.__acl__.append((security.Allow, account_id, "edit"))
+
+
 
 
 class InvoiceEntry(BaseObject):
@@ -49,6 +55,7 @@ class InvoiceEntry(BaseObject):
     amount = schema.Column(types.Numeric(precision=6, scale=2), nullable=False)
     standardised_amount = schema.Column(types.Numeric(precision=6, scale=2),
             nullable=False)
+
 
 
 class InvoiceNote(BaseObject):

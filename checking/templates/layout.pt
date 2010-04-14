@@ -42,5 +42,6 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
     <script type="text/javascript" src="${tools.static_url('libraries/css_browser_selector.js')}"> </script>
     <script type="text/javascript" src="${tools.static_url('behaviour/behaviour.js')}"></script>
+    <metal:scripts define-slot="scripts"/>
   </body>
 </html>

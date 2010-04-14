@@ -8,9 +8,7 @@ from repoze.bfg.security import Deny
 from repoze.bfg.security import Everyone
 from repoze.bfg.security import Authenticated
 
-GLOBAL_ACL = [ (Allow, Authenticated, "view"),
-               (Allow, "admin",       "edit"),
-               (Deny,  Authenticated, "signup"),
+GLOBAL_ACL = [ (Deny,  Authenticated, "signup"),
                (Allow, Everyone,      "signup"),
              ]
 

@@ -5,6 +5,7 @@ import babel
 import babel.support
 from repoze.bfg.chameleon_zpt import get_template
 from repoze.bfg.chameleon_zpt import render_template_to_response
+from repoze.bfg.exceptions import NotFound
 from repoze.bfg.url import route_url
 from repoze.bfg.url import static_url
 from checking.model import meta

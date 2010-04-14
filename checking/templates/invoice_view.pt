@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout"
+      tal:define="">
+  <head>
+    <metal:title fill-slot="title">
+    <tal:span condition="context.sent">Invoice ${context.number}Customers</tal:span>
+    <tal:span condition="not context.sent">Draft invoice</tal:span>
+    — ${context.customer.title} — Customers
+    </metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1 tal:condition="context.sent">Invoice ${context.number}</h1>
+      <h1 tal:condition="not context.sent">Draft invoice</h1>
+
+      <dl class="grid">
+        <tal:block condition="context.sent">
+          <dt>Sent on</dt>
+          <dd>${formatter.date(context.sent)}</dd>
+          <tal:block condition="not context.paid">
+            <dt>Due on</dt>
+            <dd>${formatter.date(context.due)}</dd>
+          </tal:block>
+          <tal:block condition="context.paid">
+            <dt>Paid on</dt>
+            <dd>${formatter.date(context.paid)}</dd>
+          </tal:block>
+          <tal:block condition="context.note">
+            <dt>Note</dt>
+            <dd>${context.note}</dd>
+          </tal:block>
+        </tal:block>
+      </dl>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody class="orderable">
+          <tr tal:repeat="entry context.entries">
+            <td>${entry.description}</td>
+            <td>${formatter.currency(entry.amount, entry.currency_code)}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <th class="currency">${formatter.currency(0.00, 'EUR')}</th>
+          </tr>
+        </tfoot>
+      </table>
+
+    </metal:content>
+    <metal:portlets fill-slot="portlets">
+      <div id="portlets">
+        <div class="portlet contextual">
+          <h3>Actions</h3>
+          <div class="portletContent">
+            <ul>
+              <li tal:condition="permission:edit"><a href="${tools.route_url('customer_edit', id=context.id)}">Modify</a></li>
+              <li tal:condition="permission:add-invoice"><a href="${tools.route_url('customer_add_invoice', id=context.id)}">New invoice</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </metal:portlets>
+    <script type="text/javascript" metal:fill-slot="scripts">
+      $(document).ready(function() {
+          $(".orderable").sortable({axis: "y"});
+      });
+    </script>
+  </body>
+</html>
+
