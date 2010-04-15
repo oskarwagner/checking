@@ -32,6 +32,7 @@ class Edit(object):
 
     def __call__(self):
         return render("invoice_edit.pt", self.request, self.context,
+                view=self,
                 section="customers")
 
 
