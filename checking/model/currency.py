@@ -1,5 +1,6 @@
 from sqlalchemy import schema
 from sqlalchemy import types
+from sqlalchemy.sql import functions
 from checking.model.meta import BaseObject
 
 class Currency(BaseObject):
@@ -10,9 +11,13 @@ class Currency(BaseObject):
     """
     __tablename__ = "currency"
 
-    code = schema.Column(types.String(3), primary_key=True)
+    id = schema.Column(types.Integer(),
+            schema.Sequence("currency_id_seq", optional=True),
+            primary_key=True, autoincrement=True)
+    code = schema.Column(types.String(3), nullable=False)
     rate = schema.Column(types.Numeric(precision=6, scale=2), nullable=False)
+    when = schema.Column(types.Date(), nullable=False, default=functions.now())
 
     def __repr__(self):
-        return "<Currency %s rate=%.2f>" % (self.code, self.rate)
+        return "<Currency id=%s, code=%s rate=%.2f>" % (self.id, self.code, self.rate)
 

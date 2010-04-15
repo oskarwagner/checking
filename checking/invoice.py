@@ -8,7 +8,7 @@ from checking import form
 
 Factory = SimpleTypeFactory(Invoice)
 InvoiceEntrySchema = form.OrmToSchema(InvoiceEntry,
-        exclude=["position", "invoice_id", "standardised_amount"])
+        exclude=["position", "invoice_id" ])
 
 class InvoiceSchema(schemaish.Structure):
     payment_term = schemaish.Integer(validator=validator.All(
@@ -17,9 +17,12 @@ class InvoiceSchema(schemaish.Structure):
     entries = schemaish.Sequence(attr=InvoiceEntrySchema)
 
 
+
 def View(context, request):
     return render("invoice_view.pt", request, context,
             section="customers")
+
+
 
 class Edit(object):
     def __init__(self, context, request):

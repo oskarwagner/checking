@@ -23,16 +23,33 @@
           <thead>
             <tr>
               <th>Description</th>
+              <th>VAT</th>
+              <th>Unit price</th>
               <th>Amount</th>
             </tr>
           </thead>
           <tbody class="orderable">
             <tr tal:repeat="prefix form.keys('entries')">
-              <td><input type="hidden" tal:define="field form.get_field(prefix, 'position')"
-                name="${prefix}.position" value="${field.value[0]}"/>
-                <textarea rows="2" cols="45">${entry.description}</textarea></td>
-              <td><select><option>EUR</option><option>USD</option></select>
-                <input type="text" size="6" value="${entry.amount}"/></td>
+              <td><input type="hidden" tal:define="field form.get_field(prefix, 'id')"
+                name="${prefix}.id" value="${field.value[0]}"/>
+                <label class="superImpose" for="${prefix}.description">Enter a description of the work or expense.</label>
+                <textarea rows="2" cols="45" tal:define="field form.get_field(prefix, 'description')"
+                  name="${prefix}.description" id="${prefix}.description">${field.value[0]}</textarea></td>
+              <td tal:define="field form.get_field(prefix, 'vat')">
+                <label class="superImpose" for="${prefix}.vat">VAT</label>
+                <input type="text" id="${prefix}.vat" name="${prefix}.vat" maxlength="2" size="2" value="${field.value[0]}"/> %</td>
+              <td><select tal:define="field form.get_field(prefix, 'currency_code')" name="${prefix}.currency_code">
+                  <option tal:repeat="currency tools.currencies()"
+                    value="${currency.code}">${currency.code}</option>
+                </select>
+                <label class="superImpose" for="${prefix}.unit_price">Unit price</label>
+                <input tal:define="field form.get_field(prefix, 'unit_price')" type="text" size="7"
+                name="${prefix}.unit_price" id="${prefix}.unit_price" value="${field.value[0]}"/>
+              </td>
+              <td tal:define="field form.get_field(prefix, 'units')">
+                <label class="superImpose" for="${prefix}.units">Units</label>
+                <input type="text" size="4" name="${prefix}.units" id="${prefix}.units" value="${field.value[0]}"/>
+              </td>
             </tr>
           </tbody>
           <tfoot>

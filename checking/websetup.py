@@ -16,6 +16,13 @@ def populateDatabase():
                 email="discard@simplon.biz")
         session.add(admin)
 
+    from checking.model.currency import Currency
+    euro=session.query(Currency).filter(Currency.code=="EUR").first()
+    if euro is None:
+        log.info("Adding EUR currency")
+        euro=Currency(code="EUR", rate=1)
+        session.add(euro)
+
 
 def setup_app(command, conf, vars):
     run.app({}, **conf)

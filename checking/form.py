@@ -82,6 +82,7 @@ def OrmToSchema(klass, exclude=["id"]):
     schema=schemaish.Structure()
     typemap = {
             sqlalchemy.types.Boolean: schemaish.Boolean,
+            sqlalchemy.types.Numeric: schemaish.Decimal,
             sqlalchemy.types.Integer: schemaish.Integer,
             sqlalchemy.types.String: schemaish.String,
             sqlalchemy.types.Unicode: schemaish.String,

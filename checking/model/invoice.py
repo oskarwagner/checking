@@ -49,12 +49,13 @@ class InvoiceEntry(BaseObject):
     invoice = orm.relationship(Invoice,
             backref=orm.backref("entries", order_by=position))
     description = schema.Column(types.UnicodeText(), nullable=False)
-    currency_code = schema.Column(types.String(3),
-            schema.ForeignKey(Currency.code, onupdate="RESTRICT", ondelete="RESTRICT"),
+    vat = schema.Column(types.Integer(), nullable=False)
+    currency_id = schema.Column(types.Integer(3),
+            schema.ForeignKey(Currency.id, onupdate="RESTRICT", ondelete="RESTRICT"),
             nullable=False)
-    amount = schema.Column(types.Numeric(precision=6, scale=2), nullable=False)
-    standardised_amount = schema.Column(types.Numeric(precision=6, scale=2),
-            nullable=False)
+    currency = orm.relationship(Currency, lazy="joined")
+    unit_price = schema.Column(types.Numeric(precision=6, scale=2), nullable=False)
+    units = schema.Column(types.Numeric(4,2), nullable=False, default=1)
 
 
 

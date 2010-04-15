@@ -9,6 +9,7 @@ from repoze.bfg.exceptions import NotFound
 from repoze.bfg.url import route_url
 from repoze.bfg.url import static_url
 from checking.model import meta
+from checking.model.currency import Currency
 
 timezone = pytz.timezone("Europe/Amsterdam")
 locale = babel.Locale("nl", "NL")
@@ -72,15 +73,22 @@ class Tools(object):
             return None
         return self.user.secret
 
+
     def static_url(self, resource, **kw):
         """Generate a URL for a static resources. `path` is a filesystem path
         to the source, relatives to the `templates` directory.
         """
-
         return static_url("templates/%s" % resource, self.request, **kw)
+
 
     def route_url(self, name, *args, **kw):
         return route_url(name, self.request, *args, **kw)
+
+
+    def currencies(self):
+        return meta.Session.query(Currency.code, Currency.rate)\
+                .order_by(Currency.code).all()
+
 
 
 
