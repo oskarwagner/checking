@@ -12,10 +12,11 @@
     <metal:content fill-slot="content">
       <h1>Invoice ${context.number}</h1>
 
-      <form method="post">
+      <form method="post" tal:define="form view.form">
         <fieldset class="concise">
-          <label>Payment term
-            <input type="text" maxlength="2" name="payment_term"/></label>
+          <label tal:define="field form.get_field('payment_term')">Payment term <sup class="required">*</sup>
+            <input type="text" maxlength="2" name="payment_term"/> <em
+              class="message warning" tal:condition="field.error">${field.error}</em></label>
         </fieldset>
 
         <table>
@@ -26,8 +27,10 @@
             </tr>
           </thead>
           <tbody class="orderable">
-            <tr tal:repeat="entry context.entries">
-              <td><textarea rows="2" cols="45">${entry.description}</textarea></td>
+            <tr tal:repeat="prefix form.keys('entries')">
+              <td><input type="hidden" tal:define="field form.get_field(prefix, 'position')"
+                name="${prefix}.position" value="${field.value[0]}"/>
+                <textarea rows="2" cols="45">${entry.description}</textarea></td>
               <td><select><option>EUR</option><option>USD</option></select>
                 <input type="text" size="6" value="${entry.amount}"/></td>
             </tr>
