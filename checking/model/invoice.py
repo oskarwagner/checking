@@ -1,3 +1,4 @@
+import datetime
 from sqlalchemy import orm
 from sqlalchemy import schema
 from sqlalchemy import types
@@ -33,6 +34,11 @@ class Invoice(BaseObject):
         if not self.sent:
             self.__acl__.append((security.Allow, account_id, "edit"))
 
+    @property
+    def due(self):
+        if self.sent:
+            return self.sent+datetime.timedelta(days=self.payment_term)
+        return None
 
 
 

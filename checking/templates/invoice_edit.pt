@@ -15,7 +15,7 @@
       <form method="post" tal:define="form view.form">
         <fieldset class="concise">
           <label tal:define="field form.get_field('payment_term')">Payment term <sup class="required">*</sup>
-            <input type="text" maxlength="2" name="payment_term"/> <em
+            <input type="text" size="4" maxlength="2" name="payment_term"/> <em
               class="message warning" tal:condition="field.error">${field.error}</em></label>
         </fieldset>
 
@@ -32,12 +32,12 @@
             <tr tal:repeat="prefix form.keys('entries')">
               <td><input type="hidden" tal:define="field form.get_field(prefix, 'id')"
                 name="${prefix}.id" value="${field.value[0]}"/>
-                <label class="superImpose" for="${prefix}.description">Enter a description of the work or expense.</label>
-                <textarea rows="2" cols="45" tal:define="field form.get_field(prefix, 'description')"
+                <label class="superImpose" for="${prefix}.description">Description of the work or expense.</label>
+                <textarea rows="2" cols="30" tal:define="field form.get_field(prefix, 'description')"
                   name="${prefix}.description" id="${prefix}.description">${field.value[0]}</textarea></td>
               <td tal:define="field form.get_field(prefix, 'vat')">
                 <label class="superImpose" for="${prefix}.vat">VAT</label>
-                <input type="text" id="${prefix}.vat" name="${prefix}.vat" maxlength="2" size="2" value="${field.value[0]}"/> %</td>
+                <input type="text" id="${prefix}.vat" name="${prefix}.vat" maxlength="2" size="2" value="${field.value[0]}"/>%</td>
               <td><select tal:define="field form.get_field(prefix, 'currency_code')" name="${prefix}.currency_code">
                   <option tal:repeat="currency tools.currencies()"
                     value="${currency.code}">${currency.code}</option>

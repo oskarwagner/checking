@@ -23,7 +23,7 @@
           <dd>${formatter.date(context.sent)}</dd>
           <tal:block condition="not context.paid">
             <dt>Due on</dt>
-            <dd>${formatter.date(context.due)}</dd>
+            <dd>${formatter.date(context.sent+context.payment_term)}</dd>
           </tal:block>
           <tal:block condition="context.paid">
             <dt>Paid on</dt>

@@ -1,3 +1,4 @@
+import datetime
 from webob.exc import HTTPFound
 import formish
 from sqlalchemy import sql
@@ -7,6 +8,7 @@ from checking import form
 from checking.utils import render
 from checking.utils import SimpleTypeFactory
 from checking.authentication import currentUser
+from checking.model.currency import Currency
 from checking.model.customer import Customer
 from checking.model.invoice import Invoice
 from checking.model.invoice import InvoiceEntry
@@ -94,8 +96,8 @@ class Edit(object):
 
 def View(context, request):
     session=meta.Session()
-    query=sql.select([Invoice.id, Invoice.number, Invoice.sent, Invoice.due, Invoice.paid,
-                      sql.select([func.sum(InvoiceEntry.standardised_amount)],
+    query=sql.select([Invoice.id, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid,
+                      sql.select([func.sum(InvoiceEntry.units*InvoiceEntry.unit_price*Currency.rate)],
                                  InvoiceEntry.invoice_id==Invoice.id).label("amount")],
                       Invoice.customer_id==context.id)\
             .group_by(Invoice.id)\
@@ -105,7 +107,7 @@ def View(context, request):
     invoices=[dict(id=row.id,
                    number=row.number,
                    sent=row.sent,
-                   due=row.due,
+                   due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None,
                    paid=row.paid,
                    amount=row.amount or 0,
                    url=route_url("invoice_view", request, id=row.id))
