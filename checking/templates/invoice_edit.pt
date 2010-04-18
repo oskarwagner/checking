@@ -2,6 +2,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:meta="http://xml.zope.org/namespaces/meta"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       metal:use-macro="layout"
       tal:define="">
@@ -19,17 +20,18 @@
               class="message warning" tal:condition="field.error">${field.error}</em></label>
         </fieldset>
 
-        <table>
+        <table id="entries">
           <thead>
             <tr>
               <th>Description</th>
               <th>VAT</th>
               <th>Unit price</th>
               <th>Amount</th>
+              <th></th>
             </tr>
           </thead>
-          <tbody class="orderable">
-            <tr tal:repeat="prefix form.keys('entries')">
+          <tbody class="orderable" tal:define="entries form.keys('entries')">
+            <tr tal:repeat="prefix entries">
               <td><input type="hidden" tal:define="field form.get_field(prefix, 'id')"
                 name="${prefix}.id" value="${field.value[0]}"/>
                 <label class="superImpose" for="${prefix}.description">Description of the work or expense.</label>
@@ -50,20 +52,40 @@
                 <label class="superImpose" for="${prefix}.units">Units</label>
                 <input type="text" size="4" name="${prefix}.units" id="${prefix}.units" value="${field.value[0]}"/>
               </td>
+              <td><button type="button" class="remove jsOnly" style="${'opacity: 0;' if len(entries)==1 else None}" >Verwijder</button></td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <th>Total</th>
-              <th class="currency">${formatter.currency(0.00, 'EUR')}</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td colspan="2"><button type="button" class="add jsOnly">Nieuwe regel</button></td>
             </tr>
           </tfoot>
         </table>
       </form>
     </metal:content>
-    <script type="text/javascript" metal:fill-slot="scripts">
+    <script type="text/javascript" metal:fill-slot="scripts" meta:interpolation="false">
       $(document).ready(function() {
           $(".orderable").sortable({axis: "y"});
+      });
+
+      $(".add").live("click", function() {
+          var $tbody = $("#entries tbody"),
+              $row = $tbody.find("tr:last").clone();
+          $row.find("input,textarea").each(function() { $(this).val(null); });
+          $row.appendTo($tbody);
+          mapal.renumber($tbody);
+          mapal.initContent($row);
+          $(".remove").animate({opacity: 1});
+      });
+
+      $(".remove").live("click", function() {
+          if ($("#entries tbody tr").length===2) {
+            $(".remove").animate({opacity: 0});
+          }
+          $(this).closest("tr").fadeOut(function() { $(this).remove(); });
       });
     </script>
   </body>
