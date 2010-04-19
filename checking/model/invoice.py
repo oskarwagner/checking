@@ -70,7 +70,7 @@ class InvoiceEntry(BaseObject):
 
     @property
     def total(self):
-        return self.unit_price*self.units
+        return self.unit_price*self.units*self.currency.rate
 
 
 

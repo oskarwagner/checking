@@ -34,8 +34,27 @@ class InvoiceSchema(schemaish.Structure):
 
 
 def View(context, request):
+    subtotal=context.total
+    vats={}
+    for entry in context.entries:
+        if not entry.vat:
+            continue
+        code=entry.currency.code
+        vats[entry.vat]=vats.get(entry.vat, 0)+entry.total
+    if vats:
+        vat_totals=sorted([(vat, amount*vat/100) for (vat,amount) in vats.items()])
+        grandtotal=subtotal+sum([vat[1] for vat in vat_totals])
+    else:
+        vat_totals=[]
+        grandtotal=subtotal
+        subtotal=None
+    vats=sorted(vats.items())
+
     return render("invoice_view.pt", request, context,
-            section="customers")
+            section="customers",
+            subtotal=subtotal,
+            vat_totals=vat_totals,
+            grandtotal=grandtotal)
 
 
 
