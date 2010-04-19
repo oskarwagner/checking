@@ -16,7 +16,7 @@ class Currency(BaseObject):
             primary_key=True, autoincrement=True)
     code = schema.Column(types.String(3), nullable=False)
     rate = schema.Column(types.Numeric(precision=6, scale=2), nullable=False)
-    when = schema.Column(types.Date(), nullable=False, default=functions.now())
+    until = schema.Column(types.Date())
 
     def __repr__(self):
         return "<Currency id=%s, code=%s rate=%.2f>" % (self.id, self.code, self.rate)

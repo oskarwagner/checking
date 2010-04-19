@@ -87,6 +87,7 @@ class Tools(object):
 
     def currencies(self):
         return meta.Session.query(Currency.code, Currency.rate)\
+                .filter(Currency.until==None)\
                 .order_by(Currency.code).all()
 
 
