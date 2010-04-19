@@ -41,6 +41,11 @@ class Invoice(BaseObject):
         return None
 
 
+    @property
+    def total(self):
+        return sum([entry.total for entry in self.entries])
+
+
 
 class InvoiceEntry(BaseObject):
     __tablename__ = "invoice_entry"
@@ -62,6 +67,10 @@ class InvoiceEntry(BaseObject):
     currency = orm.relationship(Currency, lazy="joined")
     unit_price = schema.Column(types.Numeric(precision=6, scale=2), nullable=False)
     units = schema.Column(types.Numeric(4,2), nullable=False, default=1)
+
+    @property
+    def total(self):
+        return self.unit_price*self.units
 
 
 

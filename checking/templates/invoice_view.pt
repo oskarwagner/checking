@@ -35,24 +35,31 @@
           </tal:block>
         </tal:block>
       </dl>
+      <hr/>
 
       <table>
         <thead>
           <tr>
             <th>Description</th>
-            <th>Amount</th>
+            <th>Unit price</th>
+            <th>Units</th>
+            <th>Price</th>
           </tr>
         </thead>
         <tbody class="orderable">
           <tr tal:repeat="entry context.entries">
             <td>${entry.description}</td>
-            <td>${formatter.currency(entry.amount, entry.currency_code)}</td>
+            <td>${formatter.currency(entry.unit_price, entry.currency.code)}</td>
+            <td>${formatter.number(entry.units)}</td>
+            <td>${formatter.currency(entry.unit_price*entry.units, entry.currency.code)}</td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
             <th>Total</th>
-            <th class="currency">${formatter.currency(0.00, 'EUR')}</th>
+            <th></th>
+            <th></th>
+            <th class="currency">${formatter.currency(context.total, 'EUR')}</th>
           </tr>
         </tfoot>
       </table>
