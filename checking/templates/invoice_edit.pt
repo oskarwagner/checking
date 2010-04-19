@@ -86,7 +86,7 @@
       $(".add").live("click", function() {
           var $tbody = $("#entries tbody"),
               $row = $tbody.find("tr:last").clone();
-          $row.find("input,textarea").each(function() { $(this).val(null); });
+              $row.find("textarea,input:last").each(function() { $(this).val(null); });
           $row.appendTo($tbody);
           mapal.renumber($tbody);
           mapal.initContent($row);
