@@ -74,7 +74,13 @@
     </metal:content>
     <script type="text/javascript" metal:fill-slot="scripts" meta:interpolation="false">
       $(document).ready(function() {
-          $(".orderable").sortable({axis: "y"});
+          var $tbody = $("#entries tbody");
+          $(".orderable").sortable({
+              axis: "y",
+              stop: function() {
+                  mapal.renumber($tbody);
+              }
+              });
       });
 
       $(".add").live("click", function() {
