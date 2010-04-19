@@ -1,6 +1,5 @@
 from sqlalchemy import schema
 from sqlalchemy import types
-from sqlalchemy.sql import functions
 from checking.model.meta import BaseObject
 
 class Currency(BaseObject):
