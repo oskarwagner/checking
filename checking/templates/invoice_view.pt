@@ -89,7 +89,6 @@
           <div class="portletContent">
             <ul>
               <li tal:condition="permission:edit"><a href="${tools.route_url('invoice_edit', id=context.id)}">Modify</a></li>
-              <li tal:condition="permission:add-invoice"><a href="${tools.route_url('customer_add_invoice', id=context.id)}">New invoice</a></li>
             </ul>
           </div>
         </div>
