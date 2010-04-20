@@ -4,9 +4,10 @@ from validatish.error import Invalid
 import formish
 import schemaish
 import sqlalchemy.types
-from checking.authentication import currentUser
+from repoze.bfg.exceptions import Forbidden
 from checking.model import meta
 from checking.model.account import Account
+from checking.utils import checkCSRF
 
 log = logging.getLogger(__name__)
 
@@ -52,24 +53,10 @@ class CSRFForm(Form):
     GET requests are not allowed to prevent tokens from appearing in
     proxy or webserver logfiles."""
 
-    def checkCSRF(self, request):
-        user = currentUser(request)
-        if user is None:
-            return True
-
-        token = request.POST.getall("csrf_token")
-        if [user.secret]==token:
-            return True
-
-        log.warning("Invalid CSRF token from account %s (id=%d): %r",
-                    user.login, user.id, token)
-        return False
-
-
     def validate(self, request, failure_callable=None, success_callable=None,
                  skip_read_only_defaults=False, check_form_name=True):
-        if not self.checkCSRF(request):
-            raise Exception("Invalid CSRF token")
+        if not checkCSRF(request):
+            raise Forbidden("Invalid CSRF token")
 
         return super(CSRFForm, self).validate(request, failure_callable,
                                               success_callable,

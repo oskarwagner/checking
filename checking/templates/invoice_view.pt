@@ -20,14 +20,14 @@
       <dl class="grid">
         <tal:block condition="context.sent">
           <dt>Sent on</dt>
-          <dd>${formatter.date(context.sent)}</dd>
+          <dd>${formatter.date(context.sent, format='long')}</dd>
           <tal:block condition="not context.paid">
             <dt>Due on</dt>
-            <dd>${formatter.date(context.sent+context.payment_term)}</dd>
+            <dd>${formatter.date(context.due, format='long')}</dd>
           </tal:block>
           <tal:block condition="context.paid">
             <dt>Paid on</dt>
-            <dd>${formatter.date(context.paid)}</dd>
+            <dd>${formatter.date(context.paid, format='long')}</dd>
           </tal:block>
           <tal:block condition="context.note">
             <dt>Note</dt>
@@ -89,6 +89,7 @@
           <div class="portletContent">
             <ul>
               <li tal:condition="permission:edit"><a href="${tools.route_url('invoice_edit', id=context.id)}">Modify</a></li>
+              <li tal:condition="permission:edit"><a href="${tools.route_url('invoice_send', id=context.id)}#form" class="openPanel">Send</a></li>
             </ul>
           </div>
         </div>

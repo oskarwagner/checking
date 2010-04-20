@@ -1,3 +1,4 @@
+import logging
 import os.path
 import random
 import pytz
@@ -10,6 +11,8 @@ from repoze.bfg.url import route_url
 from repoze.bfg.url import static_url
 from checking.model import meta
 from checking.model.currency import Currency
+
+log = logging.getLogger(__name__)
 
 timezone = pytz.timezone("Europe/Amsterdam")
 locale = babel.Locale("nl", "NL")
@@ -39,6 +42,23 @@ def randomString(length=32):
         append(random.choice(safe_characters))
     return "".join(output)
 
+
+
+def checkCSRF(request):
+    """Check if the request has a valid CSRF token."""
+    from checking.authentication import currentUser
+
+    user = currentUser(request)
+    if user is None:
+        return True
+
+    token = request.POST.getall("csrf_token")
+    if [user.secret]==token:
+        return True
+
+    log.warning("Invalid CSRF token from account %s (id=%d): %r",
+                user.login, user.id, token)
+    return False
 
 
 def SimpleTypeFactory(cls):

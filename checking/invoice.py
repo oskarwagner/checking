@@ -1,10 +1,13 @@
+import datetime
 from webob.exc import HTTPFound
 from validatish import validator
 import formish
 import schemaish
+from repoze.bfg.exceptions import Forbidden
 from repoze.bfg.url import route_url
 from checking.utils import SimpleTypeFactory
 from checking.utils import render
+from checking.utils import checkCSRF
 from checking.model import meta
 from checking.model.currency import Currency
 from checking.model.invoice import Invoice
@@ -110,5 +113,19 @@ class Edit(object):
         return render("invoice_edit.pt", self.request, self.context,
                 status_int=202 if self.request.method=="POST" else 200,
                 view=self, section="customers")
+
+
+def Send(context, request):
+    if request.method=="POST":
+        if not checkCSRF(request):
+            raise Forbidden("Invalid CSRF token")
+        if request.POST.get("action", "cancel")=="send":
+            context.sent=datetime.datetime.now()
+        return HTTPFound(location=route_url("invoice_view", request, id=context.id))
+
+    return render("invoice_send.pt", request, context,
+            status_int=202 if request.method=="POST" else 200,
+            section="customers",
+            action_url=route_url("invoice_send", request, id=context.id))
 
 

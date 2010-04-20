@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout"
+      tal:define="">
+  <head>
+    <metal:title fill-slot="title">
+    Send Invoice — ${context.customer.title} — Customers
+    </metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <form id="form" method="POST" action="${action_url}">
+        <h1>Send invoice</h1>
+
+        <p>Are you sure you want to send this invoice? Once an invoice has
+        been sent it is assigned an invoice number and you can no longer make
+        any changes.</p>
+
+        <div class="buttonBar">
+          <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
+          <button type="submit" name="action" value="send" class="defaultButton">Yes</button>
+          <button type="submit" name="action" value="cancel" class="cancelButton">No</button>
+        </div>
+      </form>
+    </metal:content>
+  </body>
+</html>
+

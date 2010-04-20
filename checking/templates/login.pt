@@ -19,14 +19,14 @@
             <em class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
 
-          <label tal:define="field form.get_field('password')">Wachtwoord
+          <label tal:define="field form.get_field('password')">Password
             <input type="password" length="80" name="password"/>
             <em class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
         </fieldset>
 
         <div class="buttonBar">
-          <button type="submit" class="defaultButton">Meld aan</button>
+          <button type="submit" class="defaultButton">Login</button>
         </div>
       </form>
     </metal:content>
