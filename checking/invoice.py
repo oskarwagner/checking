@@ -129,3 +129,19 @@ def Send(context, request):
             action_url=route_url("invoice_send", request, id=context.id))
 
 
+def AjaxSend(context, request):
+    if request.method=="POST":
+        if not checkCSRF(request):
+            raise Forbidden("Invalid CSRF token")
+
+        if request.POST.get("action", "cancel")=="send":
+            context.sent=datetime.datetime.now()
+            return dict(action="reload")
+
+        return dict(action="close")
+
+    return render("invoice_send.pt", request, context,
+            status_int=202 if request.method=="POST" else 200,
+            section="customers",
+            action_url=route_url("invoice_send", request, id=context.id))
+

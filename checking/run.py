@@ -67,8 +67,13 @@ def setupRoutes(config):
     config.add_route("invoice_edit", path="/invoices/:id/edit",
             factory=factory, view=resolve("checking.invoice:Edit"),
             permission="edit")
+    config.add_route("invoice_send_ajax", path="/invoices/:id/send",
+            factory=factory, view=resolve("checking.invoice:AjaxSend"),
+            xhr=True, renderer="json",
+            permission="edit")
     config.add_route("invoice_send", path="/invoices/:id/send",
             factory=factory, view=resolve("checking.invoice:Send"),
+            xhr=False,
             permission="edit")
 
 
