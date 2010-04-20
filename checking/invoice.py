@@ -39,7 +39,6 @@ def View(context, request):
     for entry in context.entries:
         if not entry.vat:
             continue
-        code=entry.currency.code
         vats[entry.vat]=vats.get(entry.vat, 0)+entry.total
     if vats:
         vat_totals=sorted([(vat, amount*vat/100) for (vat,amount) in vats.items()])
