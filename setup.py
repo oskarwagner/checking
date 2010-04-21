@@ -34,6 +34,7 @@ setup(name="checking",
           "formish",
           "schemaish",
           "validatish",
+          "reportlab",
           ],
       entry_points = """\
       [paste.app_factory]
