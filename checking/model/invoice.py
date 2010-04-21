@@ -4,12 +4,14 @@ from sqlalchemy import schema
 from sqlalchemy import types
 from sqlalchemy.sql import functions
 from repoze.bfg import security
-from checking.model.meta import BaseObject
+from checking.model import meta
 from checking.model.currency import Currency
 from checking.model.customer import Customer
 
+invoice_sequence = schema.Sequence("invoice_number")
+schema.CreateSequence(invoice_sequence).execute_at("after-create", meta.metadata)
 
-class Invoice(BaseObject):
+class Invoice(meta.BaseObject):
     """An invoice."""
 
     __tablename__ = "invoice"
@@ -47,7 +49,7 @@ class Invoice(BaseObject):
 
 
 
-class InvoiceEntry(BaseObject):
+class InvoiceEntry(meta.BaseObject):
     __tablename__ = "invoice_entry"
 
     id = schema.Column(types.Integer(),
@@ -74,7 +76,7 @@ class InvoiceEntry(BaseObject):
 
 
 
-class InvoiceNote(BaseObject):
+class InvoiceNote(meta.BaseObject):
     __tablename__ = "invoice_note"
 
     id = schema.Column(types.Integer(),
