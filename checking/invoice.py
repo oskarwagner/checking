@@ -115,11 +115,42 @@ class Edit(object):
                 view=self, section="customers")
 
 
+def Delete(context, request):
+    if request.method=="POST":
+        if not checkCSRF(request):
+            raise Forbidden("Invalid CSRF token")
+        if request.POST.get("action", "cancel")=="confirm":
+            meta.Session.delete(context)
+            return HTTPFound(location=route_url("customer_view", request, id=context.customer_id))
+        return HTTPFound(location=route_url("invoice_view", request, id=context.id))
+
+    return render("invoice_delete.pt", request, context,
+            status_int=202 if request.method=="POST" else 200,
+            section="customers",
+            action_url=route_url("invoice_delete", request, id=context.id))
+
+
+def AjaxDelete(context, request):
+    if request.method=="POST":
+        if not checkCSRF(request):
+            raise Forbidden("Invalid CSRF token")
+        if request.POST.get("action", "cancel")=="confirm":
+            meta.Session.delete(context)
+            return dict(action="redirect",
+                        location=route_url("customer_view", request, id=context.customer_id))
+        return dict(action="close")
+
+    return render("invoice_delete.pt", request, context,
+            status_int=202 if request.method=="POST" else 200,
+            section="customers",
+            action_url=route_url("invoice_delete", request, id=context.id))
+
+
 def Send(context, request):
     if request.method=="POST":
         if not checkCSRF(request):
             raise Forbidden("Invalid CSRF token")
-        if request.POST.get("action", "cancel")=="send":
+        if request.POST.get("action", "cancel")=="confirm":
             context.sent=datetime.datetime.now()
         return HTTPFound(location=route_url("invoice_view", request, id=context.id))
 
@@ -134,7 +165,7 @@ def AjaxSend(context, request):
         if not checkCSRF(request):
             raise Forbidden("Invalid CSRF token")
 
-        if request.POST.get("action", "cancel")=="send":
+        if request.POST.get("action", "cancel")=="confirm":
             context.sent=datetime.datetime.now()
             return dict(action="reload")
 

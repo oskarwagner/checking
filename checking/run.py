@@ -69,14 +69,22 @@ def setupRoutes(config):
     config.add_route("invoice_edit", path="/invoices/:id/edit",
             factory=factory, view=resolve("checking.invoice:Edit"),
             permission="edit")
+    config.add_route("invoice_delete", path="/invoices/:id/delete",
+            factory=factory)
+    config.add_view(route_name="invoice_delete",
+            view=resolve("checking.invoice:AjaxDelete"),
+            xhr=True, renderer="json", permission="delete")
+    config.add_view(route_name="invoice_delete",
+            view=resolve("checking.invoice:Delete"),
+            xhr=False, permission="delete")
     config.add_route("invoice_send", path="/invoices/:id/send",
             factory=factory)
     config.add_view(route_name="invoice_send",
             view=resolve("checking.invoice:AjaxSend"),
-            xhr=True, renderer="json", permission="edit")
+            xhr=True, renderer="json", permission="send")
     config.add_view(route_name="invoice_send", 
             view=resolve("checking.invoice:Send"),
-            xhr=False, permission="edit")
+            xhr=False, permission="send")
 
 
 
