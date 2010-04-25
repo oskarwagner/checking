@@ -88,8 +88,9 @@
           <h3>Actions</h3>
           <div class="portletContent">
             <ul>
+              <li tal:condition="permission:delete"><a href="${tools.route_url('invoice_delete', id=context.id)}#form" class="openPanel">Delete</a></li>
               <li tal:condition="permission:edit"><a href="${tools.route_url('invoice_edit', id=context.id)}">Modify</a></li>
-              <li tal:condition="permission:edit"><a href="${tools.route_url('invoice_send', id=context.id)}#form" class="openPanel">Send</a></li>
+              <li tal:condition="permission:send"><a href="${tools.route_url('invoice_send', id=context.id)}#form" class="openPanel">Send</a></li>
             </ul>
           </div>
         </div>
