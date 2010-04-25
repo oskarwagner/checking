@@ -129,5 +129,5 @@ def AddInvoice(context, request):
     invoice=Invoice(customer=context)
     session.add(invoice)
     session.flush()
-    return HTTPFound(location=route_url("invoice_view", request, id=invoice.id))
+    return HTTPFound(location=route_url("invoice_edit", request, id=invoice.id))
 
