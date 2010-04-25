@@ -49,7 +49,9 @@ def setupRoutes(config):
 
     factory=resolve("checking.customer:Factory")
     config.add_route("customers", path="/customers", view=resolve("checking.customer:Overview"))
-    config.add_route("customer_add", path="/customers/add", view=resolve("checking.customer:Add"))
+    config.add_route("customer_add", path="/customers/add",
+            view=resolve("checking.customer:Add"),
+            permission="add-customer")
     config.add_route("customer_edit", path="/customers/:id/edit",
             factory=factory, view=resolve("checking.customer:Edit"),
             permission="edit")

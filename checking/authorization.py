@@ -10,6 +10,7 @@ from repoze.bfg.security import Authenticated
 
 GLOBAL_ACL = [ (Deny,  Authenticated, "signup"),
                (Allow, Everyone,      "signup"),
+               (Allow, Authenticated, "add-customer"),
              ]
 
 class RouteAuthorizationPolicy(object):
