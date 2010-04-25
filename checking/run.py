@@ -59,7 +59,7 @@ def setupRoutes(config):
             factory=factory, view=resolve("checking.customer:View"),
             permission="view")
     config.add_route("customer_add_invoice", path="/customers/:id/add-invoice",
-            factory=factory, view=resolve("checking.customer:AddInvoice"),
+            factory=factory, view=resolve("checking.invoice:Add"),
             permission="add-invoice")
 
     factory=resolve("checking.invoice:Factory")

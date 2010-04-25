@@ -7,13 +7,14 @@
       metal:use-macro="layout"
       tal:define="">
   <head>
-    <metal:title fill-slot="title">Draft invoice — ${context.customer.title} — Customers</metal:title>
+    <metal:title fill-slot="title">Draft invoice — ${view.customer.title} — Customers</metal:title>
   </head>
   <body>
     <metal:content fill-slot="content">
-      <h1>Invoice ${context.number}</h1>
+      <h1 tal:condition="context is not None">Invoice ${context.number}</h1>
+      <h1 tal:condition="context is None">New Invoice</h1>
 
-      <form method="post" tal:define="form view.form">
+      <form method="post" action="${view.action}" tal:define="form view.form">
         <fieldset class="concise">
           <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
           <label tal:define="field form.get_field('payment_term')">Payment term <sup class="required">*</sup>

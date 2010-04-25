@@ -63,10 +63,17 @@ def View(context, request):
 class Edit(object):
     def __init__(self, context, request):
         self.context=context
+        self.customer=context.customer
         self.request=request
         self.form=form.CSRFForm(InvoiceSchema(), defaults=dict(
             payment_term=context.payment_term,
             entries=[entry.__dict__ for entry in context.entries]))
+
+
+    @property
+    def action(self):
+        return route_url("invoice_edit", self.request,
+                id=self.context.id)
 
 
     def save(self):
@@ -105,14 +112,40 @@ class Edit(object):
         return True
 
 
+    def cancel(self):
+        return HTTPFound(location=route_url("invoice_view", self.request, id=self.context.id))
+
     def __call__(self):
         if self.request.method=="POST":
             if self.request.POST["action"]=="cancel" or self.save():
-                return HTTPFound(location=route_url("invoice_view", self.request, id=self.context.id))
+                return self.cancel()
 
         return render("invoice_edit.pt", self.request, self.context,
                 status_int=202 if self.request.method=="POST" else 200,
                 view=self, section="customers")
+
+
+class Add(Edit):
+    def __init__(self, context, request):
+        self.context=None
+        self.customer=context
+        self.request=request
+        self.form=form.CSRFForm(InvoiceSchema())
+
+    @property
+    def action(self):
+        return route_url("customer_add_invoice", self.request,
+                id=self.customer.id)
+
+    def save(self):
+        self.context=Invoice(customer=self.customer)
+        if Edit.save(self):
+            meta.Session.add(self.context)
+            return True
+        return False
+
+    def cancel(self):
+        return HTTPFound(location=route_url("customer_view", self.request, id=self.customer.id))
 
 
 def Delete(context, request):

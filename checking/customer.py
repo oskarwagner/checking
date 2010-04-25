@@ -124,10 +124,3 @@ def View(context, request):
 
 
 
-def AddInvoice(context, request):
-    session=meta.Session()
-    invoice=Invoice(customer=context)
-    session.add(invoice)
-    session.flush()
-    return HTTPFound(location=route_url("invoice_edit", request, id=invoice.id))
-
