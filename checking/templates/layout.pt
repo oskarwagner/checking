@@ -38,9 +38,16 @@
     <p id="appendix">
       Code by <a href="http://simplon.biz/">Simplon</a> | Design by <a href="http://www.cornae.com">Cornae</a>
     </p>
+    <tal:block condition="False">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdn.jquerytools.org/1.1.2/tiny/jquery.tools.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+    </tal:block>
+    <tal:block condition="True">
+    <script type="text/javascript" src="${tools.static_url('libraries/jquery-1.4.2.js')}"></script>
+    <script type="text/javascript" src="${tools.static_url('libraries/jquery.tools.min.js')}"></script>
+    <script type="text/javascript" src="${tools.static_url('libraries/ui-1.8.1/minified/jquery-ui.min.js')}"></script>
+    </tal:block>
     <script type="text/javascript" src="${tools.static_url('libraries/jquery.form.js')}"> </script>
     <script type="text/javascript" src="${tools.static_url('libraries/css_browser_selector.js')}"> </script>
     <script type="text/javascript" src="${tools.static_url('behaviour/behaviour.js')}"></script>
