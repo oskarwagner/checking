@@ -24,6 +24,7 @@
               class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
           <label tal:define="field form.get_field('invoice_code')">Invoice code <sup class="required">*</sup>
+            <dfn class="infoPanel" title="Information">The invoice code is used to prefix to all invoice numbers for invoices related to this customer.</dfn>
             <input class="span-5" type="text" maxlength="16" name="invoice_code" value="${field.value[0]}" /> <em
             class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
