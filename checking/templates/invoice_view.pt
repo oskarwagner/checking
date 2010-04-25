@@ -91,6 +91,7 @@
               <li tal:condition="permission:delete"><a href="${tools.route_url('invoice_delete', id=context.id)}#form" class="openPanel">Delete</a></li>
               <li tal:condition="permission:edit"><a href="${tools.route_url('invoice_edit', id=context.id)}">Modify</a></li>
               <li tal:condition="permission:send"><a href="${tools.route_url('invoice_send', id=context.id)}#form" class="openPanel">Send</a></li>
+              <li tal:condition="permission:mark-paid"><a href="${tools.route_url('invoice_paid', id=context.id)}#form" class="openPanel">Mark payment</a></li>
             </ul>
           </div>
         </div>

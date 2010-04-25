@@ -35,6 +35,9 @@ class InvoiceSchema(schemaish.Structure):
     entries = schemaish.Sequence(attr=InvoiceEntrySchema())
 
 
+class PaidSchema(schemaish.Structure):
+    paid = schemaish.Date(validator=validator.Required())
+
 
 def View(context, request):
     subtotal=context.total
@@ -115,6 +118,7 @@ class Edit(object):
     def cancel(self):
         return HTTPFound(location=route_url("invoice_view", self.request, id=self.context.id))
 
+
     def __call__(self):
         if self.request.method=="POST":
             if self.request.POST["action"]=="cancel" or self.save():
@@ -146,6 +150,7 @@ class Add(Edit):
 
     def cancel(self):
         return HTTPFound(location=route_url("customer_view", self.request, id=self.customer.id))
+
 
 
 def Delete(context, request):
@@ -208,4 +213,48 @@ def AjaxSend(context, request):
             status_int=202 if request.method=="POST" else 200,
             section="customers",
             action_url=route_url("invoice_send", request, id=context.id))
+
+
+class Paid(object):
+    def __init__(self, context, request):
+        self.context=context
+        self.request=request
+        self.form=form.CSRFForm(PaidSchema(),
+            defaults=dict(paid=datetime.date.today()))
+        self.form["paid"].widget=formish.DateParts()
+
+
+    def save(self):
+        try:
+            data=self.form.validate(self.request)
+        except formish.FormError:
+            return False
+
+        self.context.paid=data["paid"]
+        return True
+
+
+    def __call__(self):
+        if self.request.method=="POST":
+            if self.request.POST["action"]=="cancel" or self.save():
+                return HTTPFound(location=route_url("invoice_view", self.request, id=self.context.id))
+
+        return render("invoice_paid.pt", self.request, self.context,
+                status_int=202 if self.request.method=="POST" else 200,
+                section="customers", view=self,
+                action_url=route_url("invoice_paid", self.request, id=self.context.id))
+
+
+class AjaxPaid(Paid):
+    def __call__(self):
+        if self.request.method=="POST":
+            if self.request.POST["action"]=="cancel":
+                return dict(action="close")
+            if self.save():
+                return dict(action="reload")
+
+        return render("invoice_paid.pt", self.request, self.context,
+                status_int=202 if self.request.method=="POST" else 200,
+                section="customers", view=self,
+                action_url=route_url("invoice_paid", self.request, id=self.context.id))
 

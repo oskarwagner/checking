@@ -121,7 +121,7 @@ def render(name, request, context=None, status_int=None, view=None, section=None
     response=render_template_to_response(template,
                 request=request, context=context, view=view, section=section,
                 tools=Tools(request),
-                formatter=formatter,
+                locale=locale, formatter=formatter,
                 layout=get_template(os.path.join("templates", "layout.pt")),
                 **kw)
     if status_int is not None:

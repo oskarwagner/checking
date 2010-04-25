@@ -37,6 +37,8 @@ class Invoice(meta.BaseObject):
             self.__acl__.append((security.Allow, account_id, ("delete", "edit")))
             if len(self.entries):
                 self.__acl__.append((security.Allow, account_id, "send"))
+        if self.sent and not self.paid:
+            self.__acl__.append((security.Allow, account_id, "mark-paid"))
 
     @property
     def due(self):

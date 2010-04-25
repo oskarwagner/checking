@@ -85,6 +85,14 @@ def setupRoutes(config):
     config.add_view(route_name="invoice_send", 
             view=resolve("checking.invoice:Send"),
             xhr=False, permission="send")
+    config.add_route("invoice_paid", path="/invoices/:id/mark-paid",
+            factory=factory)
+    config.add_view(route_name="invoice_paid",
+            view=resolve("checking.invoice:AjaxPaid"),
+            xhr=True, renderer="json", permission="mark-paid")
+    config.add_view(route_name="invoice_paid",
+            view=resolve("checking.invoice:Paid"),
+            xhr=False, permission="mark-paid")
 
 
 
