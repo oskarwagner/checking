@@ -35,6 +35,8 @@ def Overview(request):
 
 
 class Add(object):
+    can_modify_invoice_code = True
+
     def __init__(self, context, request):
         self.context=context
         self.request=request
@@ -65,6 +67,8 @@ class Add(object):
 
 
 class Edit(object):
+    can_modify_invoice_code = False
+
     def __init__(self, context, request):
         self.context=context
         self.request=request
@@ -98,9 +102,9 @@ def View(context, request):
     session=meta.Session()
     query=sql.select([Invoice.id, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid,
                       sql.select([func.sum(InvoiceEntry.units*InvoiceEntry.unit_price*Currency.rate)],
-                                 InvoiceEntry.invoice_id==Invoice.id).label("amount")],
+                                 InvoiceEntry.invoice_id==Invoice.id).as_scalar().label("amount")],
                       Invoice.customer_id==context.id)\
-            .group_by(Invoice.id)\
+            .group_by(Invoice.id, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid)\
             .order_by(Invoice.sent.desc())\
             .limit(10)
 
@@ -111,7 +115,7 @@ def View(context, request):
                    paid=row.paid,
                    amount=row.amount or 0,
                    url=route_url("invoice_view", request, id=row.id))
-               for row in session.query(query)]
+               for row in session.execute(query)]
 
     return render("customer_view.pt", request, context,
             section="customers",
