@@ -42,11 +42,18 @@
               class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
           <label tal:define="field form.get_field('postal_code')">Postal code
-            <input class="span-5" type="text" maxlength="16" name="address" value="${field.value[0]}" /> <em
+            <input class="span-5" type="text" maxlength="16" name="postal_code" value="${field.value[0]}" /> <em
               class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
           <label tal:define="field form.get_field('city')">City
-            <input class="span-5" type="text" maxlength="64" name="address" value="${field.value[0]}" /> <em
+            <input class="span-5" type="text" maxlength="64" name="city" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('country')">Country
+            <select name="country" tal:define="value field.value[0]">
+              <option tal:repeat="country sorted(locale.territories.items(), key=lambda x:x[1])"
+              value="${country[0]}" selected="${'selected' if country[0]==value else None}">${country[1]}</option>
+            </select> <em
               class="message warning" tal:condition="field.error">${field.error}</em>
           </label>
         </fieldset>

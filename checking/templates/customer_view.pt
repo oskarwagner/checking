@@ -19,9 +19,9 @@
         <tal:block condition="context.address">
           <dt>Address</dt>
           <dd><address>
-            ${context.address}
-            ${context.postal_code} ${context.city}
-            ${context.country}
+            ${context.address}<br/>
+            ${context.postal_code} ${context.city}<br/>
+            ${locale.territories.get(context.country, context.country)}
           </address>
           </dd>
         </tal:block>
