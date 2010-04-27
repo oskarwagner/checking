@@ -105,8 +105,7 @@ def View(context, request):
                                  InvoiceEntry.invoice_id==Invoice.id).as_scalar().label("amount")],
                       Invoice.customer_id==context.id)\
             .group_by(Invoice.id, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid)\
-            .order_by(Invoice.sent.desc())\
-            .limit(10)
+            .order_by(Invoice.sent.desc())
 
     today=datetime.date.today()
     def morph(row):

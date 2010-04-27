@@ -58,8 +58,7 @@ def Overview(request):
                       Customer.account_id==user.id,
                       sql.join(Invoice.__table__, Customer.__table__, Invoice.customer_id==Customer.id))\
             .group_by(Invoice.id, Customer.invoice_code, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid)\
-            .order_by(Invoice.sent.desc())\
-            .limit(10)
+            .order_by(Invoice.sent.desc())
 
     today=datetime.date.today()
     def morph(row):
