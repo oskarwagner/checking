@@ -189,7 +189,7 @@ def Send(context, request):
         if not checkCSRF(request):
             raise Forbidden("Invalid CSRF token")
         if request.POST.get("action", "cancel")=="confirm":
-            context.sent=datetime.datetime.now()
+            context.send()
         return HTTPFound(location=route_url("invoice_view", request, id=context.id))
 
     return render("invoice_send.pt", request, context,
@@ -204,7 +204,7 @@ def AjaxSend(context, request):
             raise Forbidden("Invalid CSRF token")
 
         if request.POST.get("action", "cancel")=="confirm":
-            context.sent=datetime.datetime.now()
+            context.send()
             return dict(action="reload")
 
         return dict(action="close")

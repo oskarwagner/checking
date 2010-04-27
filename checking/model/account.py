@@ -18,14 +18,16 @@ class Account(BaseObject):
     email = schema.Column(types.String(256), nullable=False)
     password = schema.Column(types.String(256), nullable=False)
     secret = schema.Column(types.String(32))
-    next_invoice_number = schema.Column(types.Integer(),
+    _next_invoice_number = schema.Column("next_invoice_number", types.Integer(),
             nullable=False, default=1)
 
     def __repr__(self):
         return "<Account login=%s>" % self.login
 
+
     def authenticate(self, password):
         return password==self.password
+
 
     @property
     def title(self):
@@ -54,4 +56,10 @@ class Account(BaseObject):
     @orm.reconstructor
     def _add_acls(self):
         self.__acl__ = [(security.Allow, self.id, ["view", "edit"]) ]
+
+
+    def newInvoiceNumber(self):
+        result=self._next_invoice_number
+        self._next_invoice_number+=1
+        return result
 

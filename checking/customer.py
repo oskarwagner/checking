@@ -109,7 +109,7 @@ def View(context, request):
             .limit(10)
 
     invoices=[dict(id=row.id,
-                   number=row.number,
+                   number="%s.%04d" % (context.invoice_code, row.number) if row.number else None,
                    sent=row.sent,
                    due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None,
                    paid=row.paid,

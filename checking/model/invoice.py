@@ -3,6 +3,7 @@ from sqlalchemy import orm
 from sqlalchemy import schema
 from sqlalchemy import types
 from sqlalchemy.sql import functions
+from sqlalchemy.ext.declarative import synonym_for
 from repoze.bfg import security
 from checking.model import meta
 from checking.model.currency import Currency
@@ -17,7 +18,7 @@ class Invoice(meta.BaseObject):
     id = schema.Column(types.Integer(),
             schema.Sequence("invoice_id_seq", optional=True),
             primary_key=True, autoincrement=True)
-    number = schema.Column(types.Integer())
+    _number = schema.Column("number", types.Integer())
     customer_id = schema.Column(types.Integer(),
             schema.ForeignKey(Customer.id, onupdate="CASCADE", ondelete="CASCADE"),
             nullable=False)
@@ -48,6 +49,20 @@ class Invoice(meta.BaseObject):
     @property
     def total(self):
         return sum([entry.total for entry in self.entries])
+
+
+    @synonym_for("_number")
+    @property
+    def number(self):
+        if not self._number:
+            return None
+        return "%s.%04d" % (self.customer.invoice_code, self._number)
+
+
+    def send(self):
+        assert self.sent is None
+        self.sent=datetime.datetime.now()
+        self._number=self.customer.account.newInvoiceNumber()
 
 
 
