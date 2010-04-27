@@ -81,7 +81,29 @@
         </tfoot>
       </table>
 
+      <h2>Notes</h2>
+
+      <p tal:condition="not context.notes">There are no notes attached to this invoice.</p>
+      <ul tal:condition="context.notes">
+        <li tal:repeat="note context.notes">
+        <em>Posted on ${formatter.date(note.posted, format='long')} at ${formatter.time(note.posted, format='short')}</em>
+          <p>${note.comment}</p>
+        </li>
+      </ul>
+
+      <form tal:condition="permission:comment"
+            method="post" action="${tools.route_url('invoice_comment', id=context.id)}">
+        <fieldset class="condensed">
+          <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
+          <legend>Add comment</legend>
+          <textarea name="comment"></textarea>
+        </fieldset>
+        <div class="buttonBar">
+          <button type="submit">Post</button>
+        </div>
+      </form>
     </metal:content>
+
     <metal:portlets fill-slot="portlets">
       <div id="portlets">
         <div class="portlet contextual">

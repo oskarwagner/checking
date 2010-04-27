@@ -31,7 +31,7 @@ class Invoice(meta.BaseObject):
     @orm.reconstructor
     def _add_acls(self):
         account_id=self.customer.account_id
-        self.__acl__=[(security.Allow, account_id, "view")]
+        self.__acl__=[(security.Allow, account_id, ("comment", "view"))]
         if not self.sent:
             self.__acl__.append((security.Allow, account_id, ("delete", "edit")))
             if len(self.entries):

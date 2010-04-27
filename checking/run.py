@@ -68,6 +68,9 @@ def setupRoutes(config):
     config.add_route("invoice_view", path="/invoices/:id",
             factory=factory, view=resolve("checking.invoice:View"),
             permission="view")
+    config.add_route("invoice_comment", path="/invoices/:id/add-comment",
+            factory=factory, view=resolve("checking.invoice:Comment"),
+            permission="comment")
     config.add_route("invoice_edit", path="/invoices/:id/edit",
             factory=factory, view=resolve("checking.invoice:Edit"),
             permission="edit")

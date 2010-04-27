@@ -12,6 +12,7 @@ from checking.model import meta
 from checking.model.currency import Currency
 from checking.model.invoice import Invoice
 from checking.model.invoice import InvoiceEntry
+from checking.model.invoice import InvoiceNote
 from checking import form
 
 Factory = SimpleTypeFactory(Invoice)
@@ -37,6 +38,10 @@ class InvoiceSchema(schemaish.Structure):
 
 class PaidSchema(schemaish.Structure):
     paid = schemaish.Date(validator=validator.Required())
+
+
+class NoteSchema(schemaish.Structure):
+    comment = schemaish.String(validator=validator.Required())
 
 
 def View(context, request):
@@ -257,4 +262,17 @@ class AjaxPaid(Paid):
                 status_int=202 if self.request.method=="POST" else 200,
                 section="customers", view=self,
                 action_url=route_url("invoice_paid", self.request, id=self.context.id))
+
+
+
+def Comment(context, request):
+    if request.method=="POST":
+        try:
+            data=form.CSRFForm(NoteSchema()).validate(request)
+        except formish.FormError:
+            return HTTPFound(location=route_url("invoice_view", request, id=context.id))
+
+        context.notes.append(InvoiceNote(comment=data["comment"]))
+
+    return HTTPFound(location=route_url("invoice_view", request, id=context.id))
 
