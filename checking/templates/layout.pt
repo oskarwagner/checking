@@ -24,7 +24,7 @@
           <a href="${tools.route_url('customers')}">Customers</a>
         </li>
         <li class="${'current' if section=='invoices' else None}">
-          <a href="#">Invoices</a>
+          <a href="${tools.route_url('invoices')}">Invoices</a>
         </li>
         <li class="${'current' if section=='reports' else None}">
           <a href="#">Reports</a>

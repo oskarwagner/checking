@@ -50,9 +50,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr tal:repeat="invoice invoices" class="${'overdue' if invoice.overdue else None}">
+          <tr tal:repeat="invoice invoices" class="${'%s dependsOn-%s' % (invoice.state, invoice.state)}">
             <td><a href="${invoice.url}"><tal:span condition="invoice.number">${invoice.number}</tal:span><tal:span condition="not invoice.number">Pending</tal:span></a></td>
-            <td>${formatter.decimal(invoice.amount)}</td>
+            <td>${formatter.currency(invoice.amount, 'EUR')}</td>
             <td><tal:span condition="invoice.sent">${formatter.date(invoice.sent, format='long')}</tal:span><tal:span condition="not invoice.sent">Unsent</tal:span></td>
             <td><tal:span condition="invoice.paid">${formatter.date(invoice.paid, format='long')}</tal:span><em tal:condition="invoice.overdue">${invoice.overdue} days overdue</em><tal:span condition="not (invoice.overdue or invoice.paid)">Unpaid</tal:span></td>
           </tr>
@@ -61,6 +61,17 @@
     </metal:content>
     <metal:portlets fill-slot="portlets">
       <div id="portlets">
+        <div class="portlet contextual">
+          <h3>Filters</h3>
+          <div class="portletContent">
+            <ul>
+              <li><label><input type="checkbox" name="unsend" checked="checked"/>Unsend</label></li>
+              <li><label><input type="checkbox" name="overdue" checked="checked"/>Overdue</label></li>
+              <li><label><input type="checkbox" name="paid" checked="checked"/>Paid</label></li>
+              <li><label><input type="checkbox" name="pending" checked="checked"/>Pending</label></li>
+            </ul>
+          </div>
+        </div>
         <div class="portlet contextual">
           <h3>Actions</h3>
           <div class="portletContent">

@@ -3,13 +3,17 @@ from webob.exc import HTTPFound
 from validatish import validator
 import formish
 import schemaish
+from sqlalchemy import sql
+from sqlalchemy import func
 from repoze.bfg.exceptions import Forbidden
 from repoze.bfg.url import route_url
+from checking.authentication import currentUser
 from checking.utils import SimpleTypeFactory
 from checking.utils import render
 from checking.utils import checkCSRF
 from checking.model import meta
 from checking.model.currency import Currency
+from checking.model.customer import Customer
 from checking.model.invoice import Invoice
 from checking.model.invoice import InvoiceEntry
 from checking.model.invoice import InvoiceNote
@@ -42,6 +46,49 @@ class PaidSchema(schemaish.Structure):
 
 class NoteSchema(schemaish.Structure):
     comment = schemaish.String(validator=validator.Required())
+
+
+def Overview(request):
+    user=currentUser(request)
+    session=meta.Session()
+
+    query=sql.select([Invoice.id, Customer.invoice_code, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid,
+                      sql.select([func.sum(InvoiceEntry.units*InvoiceEntry.unit_price*Currency.rate)],
+                                 InvoiceEntry.invoice_id==Invoice.id).as_scalar().label("amount")],
+                      Customer.account_id==user.id,
+                      sql.join(Invoice.__table__, Customer.__table__, Invoice.customer_id==Customer.id))\
+            .group_by(Invoice.id, Customer.invoice_code, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid)\
+            .order_by(Invoice.sent.desc())\
+            .limit(10)
+
+    today=datetime.date.today()
+    def morph(row):
+        due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None
+        if not row.sent:
+            state="unsend"
+        elif row.paid:
+            state="paid"
+        elif due<today:
+            state="overdue"
+        else:
+            state="pending"
+        return dict(id=row.id,
+                   number="%s.%04d" % (row.invoice_code, row.number) if row.number else None,
+                   sent=row.sent,
+                   due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None,
+                   paid=row.paid,
+                   amount=row.amount or 0,
+                   state=state,
+                   overdue=(today-due).days if row.sent and not row.paid and due<today else None,
+                   url=route_url("invoice_view", request, id=row.id))
+
+
+    invoices=[morph(row) for row in session.execute(query)]
+
+    return render("invoice_overview.pt", request,
+            section="invoices",
+            invoices=invoices)
+
 
 
 def View(context, request):

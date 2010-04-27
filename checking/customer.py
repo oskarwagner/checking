@@ -111,12 +111,21 @@ def View(context, request):
     today=datetime.date.today()
     def morph(row):
         due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None
+        if not row.sent:
+            state="unsend"
+        elif row.paid:
+            state="paid"
+        elif due<today:
+            state="overdue"
+        else:
+            state="pending"
         return dict(id=row.id,
                    number="%s.%04d" % (context.invoice_code, row.number) if row.number else None,
                    sent=row.sent,
                    due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None,
                    paid=row.paid,
                    amount=row.amount or 0,
+                   state=state,
                    overdue=(today-due).days if row.sent and not row.paid and due<today else None,
                    url=route_url("invoice_view", request, id=row.id))
 
