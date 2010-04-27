@@ -108,14 +108,20 @@ def View(context, request):
             .order_by(Invoice.sent.desc())\
             .limit(10)
 
-    invoices=[dict(id=row.id,
+    today=datetime.date.today()
+    def morph(row):
+        due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None
+        return dict(id=row.id,
                    number="%s.%04d" % (context.invoice_code, row.number) if row.number else None,
                    sent=row.sent,
                    due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None,
                    paid=row.paid,
                    amount=row.amount or 0,
+                   overdue=(today-due).days if row.sent and not row.paid and due<today else None,
                    url=route_url("invoice_view", request, id=row.id))
-               for row in session.execute(query)]
+
+
+    invoices=[morph(row) for row in session.execute(query)]
 
     return render("customer_view.pt", request, context,
             section="customers",

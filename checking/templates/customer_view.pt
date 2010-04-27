@@ -50,11 +50,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr tal:repeat="invoice invoices">
+          <tr tal:repeat="invoice invoices" class="${'overdue' if invoice.overdue else None}">
             <td><a href="${invoice.url}"><tal:span condition="invoice.number">${invoice.number}</tal:span><tal:span condition="not invoice.number">Pending</tal:span></a></td>
             <td>${formatter.decimal(invoice.amount)}</td>
-            <td><tal:span condition="invoice.sent">${formatter.date(invoice.sent)}</tal:span><tal:span condition="not invoice.sent">Unsent</tal:span></td>
-            <td><tal:span condition="invoice.paid">${formatter.date(invoice.paid)}</tal:span><tal:span condition="not invoice.paid">Unpaid</tal:span></td>
+            <td><tal:span condition="invoice.sent">${formatter.date(invoice.sent, format='long')}</tal:span><tal:span condition="not invoice.sent">Unsent</tal:span></td>
+            <td><tal:span condition="invoice.paid">${formatter.date(invoice.paid, format='long')}</tal:span><em tal:condition="invoice.overdue">${invoice.overdue} days overdue</em><tal:span condition="not (invoice.overdue or invoice.paid)">Unpaid</tal:span></td>
           </tr>
         </tbody>
       </table>
