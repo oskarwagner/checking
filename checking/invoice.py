@@ -47,6 +47,27 @@ class NoteSchema(schemaish.Structure):
     comment = schemaish.String(validator=validator.Required())
 
 
+def summaryInvoices(invoices):
+    def morph(invoice):
+        info=dict(id=invoice.id,
+                  number=invoice.number,
+                  total_gross=invoice.total("gross"),
+                  total_vat=invoice.total("vat"),
+                  state=invoice.state(),
+                  sent=invoice.sent,
+                  paid=invoice.paid,
+                  overdue=invoice.overdue())
+        info["total_net"]=info["total_gross"]+info["total_vat"]
+        return info
+
+    invoices=[morph(invoice) for invoice in invoices]
+
+    return dict(invoices=invoices,
+                total_gross=sum([i["total_gross"] for i in invoices]),
+                total_vat=sum([i["total_vat"] for i in invoices]),
+                total_net=sum([i["total_net"] for i in invoices]))
+
+
 def Overview(request):
     user=currentUser(request)
     session=meta.Session()
@@ -57,9 +78,11 @@ def Overview(request):
             .order_by(Invoice.sent.desc())\
             .options(orm.joinedload(Invoice.entries))
 
+    summary=summaryInvoices(invoices)
+
     return render("invoice_overview.pt", request,
             section="invoices",
-            invoices=invoices)
+            **summary)
 
 
 

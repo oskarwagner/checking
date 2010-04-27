@@ -15,7 +15,7 @@ from checking.model.currency import Currency
 log = logging.getLogger(__name__)
 
 timezone = pytz.timezone("Europe/Amsterdam")
-locale = babel.Locale("nl", "NL")
+locale = babel.Locale("en", "GB")
 formatter = babel.support.Format(locale, timezone)
 
 

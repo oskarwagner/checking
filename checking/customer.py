@@ -9,6 +9,7 @@ from checking.authentication import currentUser
 from checking.model.customer import Customer
 from checking.model.invoice import Invoice
 from checking.model import meta
+from checking.invoice import summaryInvoices
 
 
 CustomerSchema = form.OrmToSchema(Customer, exclude=["id", "account_id"])
@@ -100,11 +101,13 @@ def View(context, request):
             .filter(Invoice.customer==context)\
             .order_by(Invoice.sent.desc())\
             .options(orm.joinedload(Invoice.entries))
+    summary=summaryInvoices(invoices)
+
 
     return render("customer_view.pt", request, context,
             section="customers",
-            invoices=invoices,
-            edit_url=route_url("customer_edit", request, id=context.id))
+            edit_url=route_url("customer_edit", request, id=context.id),
+            **summary)
 
 
 
