@@ -18,6 +18,8 @@
       <h1 tal:condition="not context.sent">Draft invoice</h1>
 
       <dl class="grid">
+        <dt>Customer</dt>
+        <dd><a href="${tools.route_url('customer_view', id=context.customer_id)}">${context.customer.title}</a></dd>
         <tal:block condition="context.sent">
           <dt>Sent on</dt>
           <dd>${formatter.date(context.sent, format='long')}</dd>
