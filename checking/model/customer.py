@@ -9,6 +9,9 @@ class Customer(BaseObject):
     """A customer
     """
     __tablename__ = "customer"
+    __table_args__ = (schema.UniqueConstraint("account_id", "title"),
+                      schema.UniqueConstraint("account_id", "invoice_code"),
+                      {})
 
     id = schema.Column(types.Integer(),
             schema.Sequence("customer_id_seq", optional=True),
@@ -17,8 +20,8 @@ class Customer(BaseObject):
             schema.ForeignKey(Account.id, onupdate="CASCADE", ondelete="CASCADE"),
             nullable=False)
     account = orm.relationship(Account, backref="customers")
-    title = schema.Column(types.Unicode(128), nullable=False, unique=True)
-    invoice_code = schema.Column(types.String(16), nullable=False, unique=True)
+    title = schema.Column(types.Unicode(128), nullable=False)
+    invoice_code = schema.Column(types.String(16), nullable=False)
     ein = schema.Column(types.String(64))
     address = schema.Column(types.UnicodeText)
     postal_code = schema.Column(types.String(16))
