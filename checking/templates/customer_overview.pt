@@ -16,7 +16,7 @@
         </p>
       </div>
 
-      <table>
+      <table tal:condition="customers">
         <thead>
           <tr>
             <th>Name</th>
