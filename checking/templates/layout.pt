@@ -19,7 +19,7 @@
       </div>
     </div>
     <ul id="tabs">
-      <tal:block condition="permission:view">
+      <tal:block condition="permission:auth">
         <li class="${'current' if section=='customers' else None}">
           <a href="${tools.route_url('customers')}">Customers</a>
         </li>
