@@ -18,6 +18,8 @@ class Account(BaseObject):
     email = schema.Column(types.String(256), nullable=False)
     password = schema.Column(types.String(256), nullable=False)
     secret = schema.Column(types.String(32))
+    next_invoice_number = schema.Column(types.Integer(),
+            nullable=False, default=1)
 
     def __repr__(self):
         return "<Account login=%s>" % self.login
