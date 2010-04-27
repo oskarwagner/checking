@@ -7,7 +7,7 @@
       tal:define="">
   <head>
     <metal:title fill-slot="title">
-    <tal:span condition="context.sent">Invoice ${context.number}Customers</tal:span>
+    <tal:span condition="context.sent">Invoice ${context.number}</tal:span>
     <tal:span condition="not context.sent">Draft invoice</tal:span>
     — ${context.customer.title} — Customers
     </metal:title>
