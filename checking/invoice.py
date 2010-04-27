@@ -3,8 +3,7 @@ from webob.exc import HTTPFound
 from validatish import validator
 import formish
 import schemaish
-from sqlalchemy import sql
-from sqlalchemy import func
+from sqlalchemy import orm
 from repoze.bfg.exceptions import Forbidden
 from repoze.bfg.url import route_url
 from checking.authentication import currentUser
@@ -52,37 +51,11 @@ def Overview(request):
     user=currentUser(request)
     session=meta.Session()
 
-    query=sql.select([Invoice.id, Customer.invoice_code, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid,
-                      sql.select([func.sum(InvoiceEntry.units*InvoiceEntry.unit_price*Currency.rate)],
-                                 InvoiceEntry.invoice_id==Invoice.id).as_scalar().label("amount")],
-                      Customer.account_id==user.id,
-                      sql.join(Invoice.__table__, Customer.__table__, Invoice.customer_id==Customer.id))\
-            .group_by(Invoice.id, Customer.invoice_code, Invoice.number, Invoice.sent, Invoice.payment_term, Invoice.paid)\
-            .order_by(Invoice.sent.desc())
-
-    today=datetime.date.today()
-    def morph(row):
-        due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None
-        if not row.sent:
-            state="unsend"
-        elif row.paid:
-            state="paid"
-        elif due<today:
-            state="overdue"
-        else:
-            state="pending"
-        return dict(id=row.id,
-                   number="%s.%04d" % (row.invoice_code, row.number) if row.number else None,
-                   sent=row.sent,
-                   due=(row.sent+datetime.timedelta(days=row.payment_term)) if row.sent else None,
-                   paid=row.paid,
-                   amount=row.amount or 0,
-                   state=state,
-                   overdue=(today-due).days if row.sent and not row.paid and due<today else None,
-                   url=route_url("invoice_view", request, id=row.id))
-
-
-    invoices=[morph(row) for row in session.execute(query)]
+    invoices=session.query(Invoice)\
+            .select_from(orm.join(Invoice, Customer))\
+            .filter(Customer.account==user)\
+            .order_by(Invoice.sent.desc())\
+            .options(orm.joinedload(Invoice.entries))
 
     return render("invoice_overview.pt", request,
             section="invoices",
@@ -91,26 +64,7 @@ def Overview(request):
 
 
 def View(context, request):
-    subtotal=context.total
-    vats={}
-    for entry in context.entries:
-        if not entry.vat:
-            continue
-        vats[entry.vat]=vats.get(entry.vat, 0)+entry.total
-    if vats:
-        vat_totals=sorted([(vat, amount*vat/100) for (vat,amount) in vats.items()])
-        grandtotal=subtotal+sum([vat[1] for vat in vat_totals])
-    else:
-        vat_totals=[]
-        grandtotal=subtotal
-        subtotal=None
-    vats=sorted(vats.items())
-
-    return render("invoice_view.pt", request, context,
-            section="customers",
-            subtotal=subtotal,
-            vat_totals=vat_totals,
-            grandtotal=grandtotal)
+    return render("invoice_view.pt", request, context, section="customers")
 
 
 

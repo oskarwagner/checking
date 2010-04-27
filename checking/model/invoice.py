@@ -46,9 +46,26 @@ class Invoice(meta.BaseObject):
         return None
 
 
-    @property
-    def total(self):
-        return sum([entry.total for entry in self.entries])
+    def total(self, type="gross"):
+        assert type in ["gross", "net", "vat"]
+        gross=sum([entry.total for entry in self.entries])
+        if type=="gross":
+            return gross
+
+        vat=sum([v[1] for v in self.VAT()])
+        if type=="vat":
+            return vat
+        return gross+vat
+
+
+    def VAT(self):
+        totals={}
+        for entry in self.entries:
+            current=entry.total
+            totals[entry.vat]=totals.get(entry.vat, 0)+current
+        for (vat, total) in totals.items():
+            totals[vat]=(totals[vat]*vat)/100
+        return sorted(totals.items())
 
 
     @synonym_for("_number")
@@ -57,6 +74,29 @@ class Invoice(meta.BaseObject):
         if not self._number:
             return None
         return "%s.%04d" % (self.customer.invoice_code, self._number)
+
+
+    def state(self):
+        if not self.sent:
+            return "unsend"
+        elif self.paid:
+            return "paid"
+        today=datetime.date.today()
+        due=self.sent+datetime.timedelta(days=self.payment_term)
+        if due<today:
+            return "overdue"
+        else:
+            return "pending"
+
+
+    def overdue(self):
+        if self.paid or not self.sent:
+            return None
+        today=datetime.date.today()
+        due=self.sent+datetime.timedelta(days=self.payment_term)
+        if due>=today:
+            return None
+        return (today-due).days
 
 
     def send(self):

@@ -59,14 +59,14 @@
           </tr>
         </tbody>
         <tfoot>
-          <tr tal:condition="subtotal">
+          <tr tal:define="gross context.total('gross')" tal:condition="gross">
             <th>Total</th>
             <th></th>
             <th></th>
             <th></th>
-            <th class="currency">${formatter.currency(subtotal, 'EUR')}</th>
+            <th class="currency">${formatter.currency(gross, 'EUR')}</th>
           </tr>
-          <tr tal:repeat="vat vat_totals">
+          <tr tal:repeat="vat context.VAT()">
             <th>${vat[0]}% VAT</th>
             <th></th>
             <th></th>
@@ -78,7 +78,7 @@
             <th></th>
             <th></th>
             <th></th>
-            <th class="currency">${formatter.currency(grandtotal, 'EUR')}</th>
+            <th class="currency">${formatter.currency(context.total('net'), 'EUR')}</th>
           </tr>
         </tfoot>
       </table>
