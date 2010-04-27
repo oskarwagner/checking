@@ -26,9 +26,6 @@
         <li class="${'current' if section=='invoices' else None}">
           <a href="${tools.route_url('invoices')}">Invoices</a>
         </li>
-        <li class="${'current' if section=='reports' else None}">
-          <a href="#">Reports</a>
-        </li>
       </tal:block>
       <li id="home">
         <a href="${tools.route_url('home')}">Home</a>
