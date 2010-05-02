@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout">
+  <head>
+    <metal:title fill-slot="title">Invoices</metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <h1>Invoices</h1>
+
+      <div class="message notice" tal:condition="not invoices">
+        <p>You have not created any invoices.
+        </p>
+      </div>
+
+      <table tal:condition="invoices">
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Gross</th>
+            <th>VAT</th>
+            <th>Net</th>
+            <th>Sent on</th>
+            <th>Paid on</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr tal:repeat="invoice invoices" class="${'%s dependsOn-%s' % (invoice.state, invoice.state)}">
+            <td><a href="${tools.route_url('invoice_view', id=invoice.id)}"><tal:span condition="invoice.state!='unsend'">${invoice.number}</tal:span><tal:span condition="invoice.state=='unsend'">Pending</tal:span></a></td>
+            <td>${formatter.currency(invoice.total_gross, 'EUR')}</td>
+            <td>${formatter.currency(invoice.total_vat, 'EUR')}</td>
+            <td>${formatter.currency(invoice.total_net, 'EUR')}</td>
+            <td><tal:span condition="invoice.state!='unsend'">${formatter.date(invoice.sent, format='long')}</tal:span><tal:span condition="invoice.state=='unsend'">Unsend</tal:span></td>
+            <td><tal:span condition="invoice.state=='paid'">${formatter.date(invoice.paid, format='long')}</tal:span><em tal:condition="invoice.state=='overdue'">${invoice.overdue} days overdue</em><tal:span condition="invoice.state=='pending'">Unpaid</tal:span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td>${formatter.currency(total_gross, 'EUR')}</td>
+            <td>${formatter.currency(total_vat, 'EUR')}</td>
+            <td>${formatter.currency(total_net, 'EUR')}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </metal:content>
+    <metal:portlets fill-slot="portlets">
+      <div id="portlets" tal:condition="invoices">
+        <div class="portlet contextual">
+          <h3>Filters</h3>
+          <div class="portletContent">
+            <ul>
+              <li><label><input type="checkbox" name="unsend" checked="checked"/>Unsend</label></li>
+              <li><label><input type="checkbox" name="overdue" checked="checked"/>Overdue</label></li>
+              <li><label><input type="checkbox" name="paid" checked="checked"/>Paid</label></li>
+              <li><label><input type="checkbox" name="pending" checked="checked"/>Pending</label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </metal:portlets>
+  </body>
+</html>
