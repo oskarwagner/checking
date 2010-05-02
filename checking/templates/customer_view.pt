@@ -11,7 +11,7 @@
     <metal:content fill-slot="content">
       <h1>${context.title}</h1>
 
-      <dl class="grid">
+      <dl class="grid span-5">
         <tal:block condition="context.ein">
           <dt>EIN</dt>
           <dd>${context.ein}</dd>

@@ -17,7 +17,7 @@
       <h1 tal:condition="context.sent">Invoice ${context.number}</h1>
       <h1 tal:condition="not context.sent">Draft invoice</h1>
 
-      <dl class="grid">
+      <dl class="grid span-5">
         <dt>Customer</dt>
         <dd><a href="${tools.route_url('customer_view', id=context.customer_id)}">${context.customer.title}</a></dd>
         <tal:block condition="context.sent">
