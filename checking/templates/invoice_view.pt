@@ -98,7 +98,7 @@
         <fieldset class="condensed">
           <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
           <legend>Add comment</legend>
-          <textarea name="comment"></textarea>
+          <textarea name="comment" class="span-13"></textarea>
         </fieldset>
         <div class="buttonBar">
           <button type="submit">Post</button>
