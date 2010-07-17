@@ -1,0 +1,56 @@
+/* @group Tabs */
+
+#tabs {
+	height: 80px;
+}
+
+/* @end */
+
+
+/* @group Page styling */
+
+#tabs #home a {
+	background: url("logo.png") no-repeat scroll 40px 0 transparent;
+	margin-top: -20px;
+	height: 80px;
+}
+
+#tabs {
+	background: #006634 url("top_bean.png") top right no-repeat;
+}
+
+#tabs li a {
+	padding-top: 27px;
+}
+
+#tabs li a:hover {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#33CC33), to(#006634));
+	background: -moz-linear-gradient(19% 75% 90deg,#33CC33, #006634);
+}
+
+#tabs li a:active {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#006634), to(#33CC33));
+	background: -moz-linear-gradient(19% 75% 90deg,#1277A6, #33CC33, #C7C7C7 100%);
+}
+
+/* @end */
+
+/* @group Site menu */
+
+ul#siteMenu > li > ul {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+ul#siteMenu > li > ul > li {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+ul#siteMenu > li > a {
+	color: #ffca0d;
+}
+
+/* @end */
