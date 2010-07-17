@@ -18,6 +18,7 @@
         <metal:content define-slot="content"/>
       </div>
     </div>
+
     <ul id="tabs">
       <tal:block condition="permission:auth">
         <li class="${'current' if section=='customers' else None}">
@@ -31,6 +32,18 @@
         <a href="${tools.route_url('home')}">Home</a>
       </li>
     </ul>
+
+    <ul class="menu" id="siteMenu">
+      <li id="user" tal:condition="tools.user is None"><a href="${tools.route_url('login')}">Log in</a></li>
+      <li id="user" tal:condition="tools.user is not None">
+        <a href="#">${tools.user.title}</a>
+        <ul>
+          <li><a href="${tools.route_url('profile')}">Profile</a></li>
+          <li><a href="${tools.route_url('logout')}">Log out</a></li>
+        </ul>
+      </li>
+    </ul>
+
     <metal:portlets define-slot="portlets"/>
     <p id="appendix">
       Code by <a href="http://simplon.biz/">Simplon</a> | Design by <a href="http://www.cornae.com">Cornae</a>
