@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      i18n:translate="s4u.admin"
+      metal:use-macro="layout">
+  <head>
+    <metal:title fill-slot="title" i18n:name="">Profile</metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <form method="POST" action="${action_url}">
+        <fieldset class="concise">
+          <input type="hidden" name="csrf_token" value="${tools.csrf_token}" />
+          <label tal:define="field form.get_field('firstname')"><tal:span i18n:translate="">Firstname</tal:span><sup class="required">*</sup>
+            <input type="text" maxlength="64" name="firstname" value="${field.value[0]}"/>
+            <em class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('surname')"><tal:span i18n:translate="">Surname</tal:span><sup class="required">*</sup>
+            <input type="text" maxlength="64" name="surname" value="${field.value[0]}"/>
+            <em class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('email')"><tal:span i18n:translate="">Email address</tal:span><sup class="required">*</sup>
+            <input type="text" maxlength="256" name="email" value="${field.value[0]}"/>
+            <em class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('password')"><tal:span i18n:translate="">Password</tal:span>
+            <input type="password" maxlength="256" name="password.input"/>
+            <em class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('password')"><tal:span i18n:translate="">Repeat password</tal:span>
+            <input type="password" maxlength="256" name="password.confirm"/>
+          </label>
+        </fieldset>
+
+        <div class="buttonBar">
+          <button type="submit" class="defaultButton" i18n:name="">Update</button>
+        </div>
+      </form>
+    </metal:content>
+  </body>
+</html>

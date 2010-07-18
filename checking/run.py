@@ -46,8 +46,11 @@ def setupRoutes(config):
     config.add_route("logout", path="/logout", view=resolve("checking.authentication:Logout"))
     config.add_route("signup", path="/signup", view=resolve("checking.signup:Signup"),
             permission="signup")
+
+    factory=resolve("checking.profile:Factory")
     config.add_route("profile", path="/profile",
-            custom_predicates=(predAuthenticated,))
+            custom_predicates=(predAuthenticated,),
+            factory=factory, view=resolve("checking.profile:View"))
 
     factory=resolve("checking.customer:Factory")
     config.add_route("customers", path="/customers",
