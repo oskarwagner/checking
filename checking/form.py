@@ -1,15 +1,20 @@
+import io
 import logging
+import os
 from validatish import validator
 from validatish.error import Invalid
 import formish
 import schemaish
+import PIL.Image
 import sqlalchemy.types
 from repoze.bfg.exceptions import Forbidden
 from checking.model import meta
 from checking.model.account import Account
 from checking.utils import checkCSRF
+from checking import _
 
 log = logging.getLogger(__name__)
+
 
 
 class AvailableLogin(validator.Validator):
@@ -23,6 +28,35 @@ class AvailableLogin(validator.Validator):
         query=meta.Session.query(Account.id).filter(Account.login==v)
         if query.count():
             raise Invalid(self.msg, validator=self)
+
+
+
+class Image(validator.Validator):
+    """Verify if an uploaded file is a valid image. It tries to load an image
+    using PIL to see if it can be processed.
+    """
+    msg = _(u"Please upload an image. Supported formats are jpeg, png and gif.")
+    msg_format = _(u"This image format is not supported. Please upload a jpeg, png or gif image.")
+
+    def __call__(self, v):
+        if v is None:
+            return
+
+        # The formish file manager gives us its cache file which starts
+        # with internal data. PIL does not like that, so we need to create
+        # our own file.
+        position=v.file.tell()
+        data=io.BytesIO(v.file.read())
+        v.file.seek(position, os.SEEK_SET)
+
+        try:
+            pil_data=PIL.Image.open(data)
+            pil_data.load()
+        except (IOError, OverflowError):
+            raise Invalid(self.msg_format, validator=self)
+
+        if pil_data.format not in [ "GIF", "PNG", "JPEG" ]:
+            raise Invalid(self.msg_format, validator=self)
 
 
 class MustAgree(validator.Required):

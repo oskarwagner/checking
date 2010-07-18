@@ -18,8 +18,19 @@ class Account(BaseObject):
     email = schema.Column(types.String(256), nullable=False)
     password = schema.Column(types.String(256), nullable=False)
     secret = schema.Column(types.String(32))
+
     _next_invoice_number = schema.Column("next_invoice_number", types.Integer(),
             nullable=False, default=1)
+
+    company = schema.Column(types.Unicode(64), nullable=False)
+    logo = schema.Column(types.LargeBinary())
+    logo_mimetype = schema.Column(types.String(64))
+    ein = schema.Column(types.String(64))
+    address = schema.Column(types.UnicodeText)
+    postal_code = schema.Column(types.String(16))
+    city = schema.Column(types.Unicode(64))
+    country = schema.Column(types.String(3))
+
 
     def __repr__(self):
         return "<Account login=%s>" % self.login

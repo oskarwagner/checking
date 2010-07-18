@@ -1,4 +1,5 @@
 import datetime
+import io
 from webob.exc import HTTPFound
 from validatish import validator
 import formish
@@ -298,4 +299,18 @@ def Comment(context, request):
         context.notes.append(InvoiceNote(comment=data["comment"]))
 
     return HTTPFound(location=route_url("invoice_view", request, id=context.id))
+
+
+
+from reportlab import pdfgen
+from reportlab.lib import pagesizes
+
+class Print(object):
+    def __init__(self, context, request):
+        self.context=context
+        self.request=request
+
+    def __call__(self):
+        canvas=pdfgen.Canvas(io.BytesIO(), pagesizes.A4)
+        canvas.showPage()
 

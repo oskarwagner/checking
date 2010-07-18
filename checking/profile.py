@@ -23,6 +23,16 @@ class ProfileSchema(schemaish.Structure):
         validator.Length(min=4, max=256),
         validator.Length(max=256)))
 
+    company = schemaish.String(validator=validator.All(
+        validator.Required(),
+        validator.Length(max=64)))
+    ein = schemaish.String()
+    logo = schemaish.String(validator=form.Image())
+    address = schemaish.String()
+    postal_code = schemaish.String(validator=validator.Length(max=16))
+    city = schemaish.String(validator=validator.Length(max=64))
+    country = schemaish.String(validator=validator.Length(max=3))
+
 
 def Factory(request):
     return currentUser(request)
@@ -34,6 +44,7 @@ class View(object):
         self.request=request
         self.form=form.CSRFForm(ProfileSchema(), defaults=self.context.__dict__)
         self.form["password"].widget=formish.CheckedPassword()
+        self.form["logo"].widget=formish.FileUpload()
 
 
     def update(self):
@@ -42,11 +53,16 @@ class View(object):
         except formish.FormError:
             return False
 
-        self.context.firstname=data["firstname"]
-        self.context.surname=data["surname"]
-        self.context.email=data["email"]
         if data["password"] is not None:
             self.context.password=data["password"]
+        del data["password"]
+        if data["logo"] is not None:
+            data["logo_mimetype"]=data["logo"].mimetype
+            data["logo"]=data["logo"].file.read()
+        else:
+            del data["logo"]
+        for (key,value) in data.items():
+            setattr(self.context, key, value)
         return True
 
 

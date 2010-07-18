@@ -1,2 +1,3 @@
-# A package
+from translationstring import TranslationStringFactory
+_ = TranslationStringFactory("bfgtools")
 

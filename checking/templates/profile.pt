@@ -4,16 +4,17 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      i18n:translate="s4u.admin"
+      i18n:domain="s4u.admin"
       metal:use-macro="layout">
   <head>
     <metal:title fill-slot="title" i18n:name="">Profile</metal:title>
   </head>
   <body>
     <metal:content fill-slot="content">
-      <form method="POST" action="${action_url}">
+      <form method="POST" action="${action_url}" enctype="multipart/form-data">
         <fieldset class="concise">
           <input type="hidden" name="csrf_token" value="${tools.csrf_token}" />
+          <legend>Account information</legend>
           <label tal:define="field form.get_field('firstname')"><tal:span i18n:translate="">Firstname</tal:span><sup class="required">*</sup>
             <input type="text" maxlength="64" name="firstname" value="${field.value[0]}"/>
             <em class="message warning" tal:condition="field.error">${field.error}</em>
@@ -35,6 +36,42 @@
           </label>
         </fieldset>
 
+        <fieldset class="concise">
+          <legend>Company details</legend>
+          <label tal:define="field form.get_field('company')">Name<sup class="required">*</sup>
+            <input class="span-5" type="text" maxlength="64" name="company" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('logo')"><tal:span i18n:translate="">Logo</tal:span>
+            <input type="hidden" name="logo.name" value="${field.value['name'][0]}" />
+            <input type="hidden" name="logo.default" value="${field.value['default'][0]}" />
+            <input type="file" name="logo.file" />
+            <em class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('ein')">Tax Identification Number
+            <input class="span-5" type="text" maxlength="64" name="company" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('address')">Address
+            <textarea class="span-5" rows="3" cols="35"  name="address">${field.value[0]}</textarea> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('postal_code')">Postal code
+            <input class="span-5" type="text" maxlength="16" name="postal_code" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('city')">City
+            <input class="span-5" type="text" maxlength="64" name="city" value="${field.value[0]}" /> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+          <label tal:define="field form.get_field('country')">Country
+            <select name="country" tal:define="value field.value[0]">
+              <option tal:repeat="country sorted(locale.territories.items(), key=lambda x:x[1])"
+              value="${country[0]}" selected="${'selected' if country[0]==value else None}">${country[1]}</option>
+            </select> <em
+              class="message warning" tal:condition="field.error">${field.error}</em>
+          </label>
+        </fieldset>
         <div class="buttonBar">
           <button type="submit" class="defaultButton" i18n:name="">Update</button>
         </div>
