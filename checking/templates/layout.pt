@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base.css')}" />
     <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/simplon/base.css')}" />
     <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/checking/base.css')}" />
-    <!--[if lte IE 6]> <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base-ie6.css')}" /> <![endif]-->
     <!--[if IE 7]> <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base-ie7.css')}" /> <![endif]-->
     <!--[if IE 8]> <link rel="stylesheet" type="text/css" media="screen" href="${tools.static_url('style/main/base-ie8.css')}" /> <![endif]-->
   </head>
