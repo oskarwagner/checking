@@ -34,7 +34,7 @@ setup(name="checking",
           "formish",
           "schemaish",
           "validatish",
-          "reportlab",
+          "z3c.rml",
           "PIL",
           ],
       entry_points = """\
