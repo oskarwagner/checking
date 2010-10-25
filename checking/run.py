@@ -76,6 +76,8 @@ def setupRoutes(config):
     config.add_route("invoice_view", path="/invoices/:id",
             factory=factory, view=resolve("checking.invoice:View"),
             permission="view")
+    config.add_route("invoice_print", path="/invoices/:id/print",
+            factory=factory)
     config.add_route("invoice_comment", path="/invoices/:id/add-comment",
             factory=factory, view=resolve("checking.invoice:Comment"),
             permission="comment")
@@ -111,9 +113,12 @@ def setupRoutes(config):
 
 def setupChameleon(config):
     from checking.zpt import PermissionTranslator
+    from checking.utils import GlobalsFactory
     config.registry.registerUtility(
             PermissionTranslator(),
             name="permission")
+    config.set_renderer_globals_factory(GlobalsFactory)
+    
 
 
 def app(global_config, **settings):
@@ -134,11 +139,12 @@ def app(global_config, **settings):
                 timeout=30*60, max_age=30*60,
                 reissue_time=20*60),
             authorization_policy=RouteAuthorizationPolicy())
+    config.hook_zca()
     config.begin()
     setupSqlalchemy(settings)
     setupRoutes(config)
     setupChameleon(config)
-    config.hook_zca()
+    config.scan()
     config.end()
 
     app = config.make_wsgi_app()

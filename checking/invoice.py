@@ -1,16 +1,16 @@
 import datetime
-import io
 from webob.exc import HTTPFound
 from validatish import validator
 import formish
 import schemaish
 from sqlalchemy import orm
 from repoze.bfg.exceptions import Forbidden
+from repoze.bfg.view import bfg_view
 from repoze.bfg.url import route_url
 from checking.authentication import currentUser
 from checking.utils import SimpleTypeFactory
-from checking.utils import render
 from checking.utils import checkCSRF
+from checking.utils import render
 from checking.model import meta
 from checking.model.currency import Currency
 from checking.model.customer import Customer
@@ -302,15 +302,22 @@ def Comment(context, request):
 
 
 
-from reportlab import pdfgen
-from reportlab.lib import pagesizes
+@bfg_view(route_name="invoice_print", permission="view")
+def Print(context, request):
+    from z3c.rml.document import Document
+    from repoze.bfg.renderers import render
+    from lxml import etree
+    from cStringIO import StringIO
+    from webob import Response
 
-class Print(object):
-    def __init__(self, context, request):
-        self.context=context
-        self.request=request
+    rml=render("checking:rml/invoice.rml.pt", {}, request)
+    doc=Document(etree.fromstring(rml))
+    output=StringIO()
+    doc.process(output)
+    output.seek(0)
+    response=Response(output.read())
+    response.content_type="application/pdf"
+    response.headers.add("Content-Disposition", "attachment; filename=%s.pdf" % context.number)
+    return response
 
-    def __call__(self):
-        canvas=pdfgen.Canvas(io.BytesIO(), pagesizes.A4)
-        canvas.showPage()
 

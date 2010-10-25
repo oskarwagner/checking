@@ -112,6 +112,20 @@ class Tools(object):
 
 
 
+def GlobalsFactory(system):
+    """Globals factory to add extra globals to the variables passed to
+    a template.
+
+    This method should be registered using
+    :py:meth:`repoze.bfg.configuration.Configurator.set_renderer_globals_factory`.
+    """
+    request=system["request"]
+    return { "tools": Tools(request),
+             "locale": locale,
+             "formatter": formatter,
+             "layout": get_template(os.path.join("templates", "layout.pt")),
+           }
+
 
 def render(name, request, context=None, status_int=None, view=None, section=None, **kw):
     if os.path.sep!="/":
@@ -120,8 +134,6 @@ def render(name, request, context=None, status_int=None, view=None, section=None
 
     response=render_template_to_response(template,
                 request=request, context=context, view=view, section=section,
-                tools=Tools(request),
-                locale=locale, formatter=formatter,
                 layout=get_template(os.path.join("templates", "layout.pt")),
                 **kw)
     if status_int is not None:

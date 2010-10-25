@@ -1,0 +1,104 @@
+<document filename="test_001_hello.pdf" invariant="1">
+
+  <template pageSize="a4" showBoundary="0">
+    <pageTemplate id="main" pageSize="a4 portrait">
+      <pageGraphics>
+        <!-- Header -->
+        <image file="[checking]/rml/logo.jpg" x="72" y="720" width="59" height="72"/>
+        <setFont name="Times-Roman" size="10"/>
+        <lines>400 789 523 789</lines>
+        <setFont name="Times-Roman" size="32"/>
+        <drawCentredString x="461" y="759">
+          Factuur
+        </drawCentredString>
+        <lines>400 749 523 749</lines>
+
+        <place x="400" y="641" height="89" width="123">
+          <para>Factuurnummer: ${context.number}</para>
+          <para tal:condition="context.sent">${formatter.date(context.sent, format='long')}</para>
+          <para tal:condition="context.note">${context.note}</para>
+        </place>
+
+        <!-- Footer -->
+        <lines>72 95 523 95</lines>
+        <place x="72" y="16" width="250" height="75">
+          <para>Simplon B.V.</para>
+          <para>Schimmelpenninckstraat 8.</para>
+          <para>2316 DT Leiden</para>
+          <para>Telefoon: 071 7370213</para>
+          <para>E-mail: info@simplon.biz</para>
+        </place>
+        <place x="387" y="16" width="172" height="75">
+          <para>BTW nr.: NL8226.27.620.B.01</para>
+          <para>KvK Den Haag nr. 5015576</para>
+          <para>Bankrekening: 46.17.95.175</para>
+        </place>
+      </pageGraphics>
+      <frame id="first" x1="72" y1="100" width="451" height="588"/>
+    </pageTemplate>
+  </template>
+
+  <stylesheet>
+    <paraStyle name="customerTitle" fontName="Helvetica-Bold" fontSize="12" spaceAfter="5"/>
+
+    <blockTableStyle id="invoiceTable">
+      <blockAlignment value="RIGHT" start="-1,0" stop="-1,-1"/>
+      <blockRightPadding start="0,0" stop="0,-1" length="18" />
+      <blockLeftPadding start="0,0" stop="0,-1" length="0" />
+      <blockRightPadding start="-1,0" stop="-1,-1" length="0" />
+      <!-- Style the header row -->
+      <lineStyle kind="LINEBELOW" colorName="black" thickness="1" start="0,0" stop="-1,0"/>
+      <blockFont name="Helvetica-Bold" start="0,0" stop="-1,0"/>
+      <!-- Style the last rows (with totals) -->
+      <lineStyle kind="LINEABOVE" colorName="black" thickness="1" start="-2,-3" stop="-1,-3"/>
+      <blockFont name="Helvetica-Bold" start="0,-3" stop="-1,-1"/>
+      <blockAlignment value="RIGHT" start="-3,-3" stop="-3,-1"/>
+    </blockTableStyle>
+  </stylesheet>
+
+  <story tal:define="customer context.customer; decimal_format '#,##0.00'">
+    <para style="customerTitle">${customer.title}</para>
+    <para>${customer.address}</para>
+    <para>${customer.postal_code} ${customer.city}</para>
+    <para>${locale.territories.get(customer.country, customer.country)}</para>
+
+    <spacer length="72"/>
+
+    <blockTable style="invoiceTable" colWidths="211,80,80,20,60">
+      <tr>
+        <td>Omschrijving</td>
+        <td>Stuksprijs</td>
+        <td>Aantal</td>
+        <td>Bedrag</td>
+      </tr>
+      <tr tal:repeat="entry context.entries">
+        <td><para>${entry.description}</para></td>
+        <td>${formatter.decimal(entry.unit_price, format=decimal_format)}</td>
+        <td>${formatter.decimal(entry.units)}</td>
+        <td>${entry.currency.code}</td>
+        <td>${formatter.decimal(entry.unit_price*entry.units, format=decimal_format)}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td>Subtotaal</td>
+        <td>EUR</td>
+        <td>${formatter.decimal(context.total('gross'), format=decimal_format)}</td>
+      </tr>
+      <tr tal:repeat="vat context.VAT()">
+        <td></td>
+        <td></td>
+        <td>${vat[0]}% BTW</td>
+        <td>EUR</td>
+        <td>${formatter.decimal(vat[1], format=decimal_format)}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td>Totaal</td>
+        <td>EUR</td>
+        <td>${formatter.decimal(context.total('net'), format=decimal_format)}</td>
+      </tr>
+    </blockTable>
+  </story>
+</document>
