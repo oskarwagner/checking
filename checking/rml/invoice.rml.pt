@@ -3,6 +3,21 @@
   <template pageSize="a4" showBoundary="0">
     <pageTemplate id="main" pageSize="a4 portrait">
       <pageGraphics>
+        <!-- Draft marker for unsent invoices -->
+        <tal:block condition="not context.sent">
+          <saveState/>
+          <setFont name="Times-Roman" size="216"/>
+          <fill color="#f0f0f0"/>
+          <translate dx="355" dy="400"/>
+          <rotate degrees="45"/>
+          <drawCentredString x="0" y="0">DRAFT</drawCentredString>
+          <!-- z3c.rml does not support saveState and restoreState.. -->
+          <rotate degrees="-45"/>
+          <translate dx="-350" dy="-400"/>
+          <fill color="black"/>
+          <restoreState/>
+        </tal:block>
+
         <!-- Header -->
         <image file="[checking]/rml/logo.jpg" x="72" y="720" width="59" height="72"/>
         <setFont name="Times-Roman" size="10"/>
