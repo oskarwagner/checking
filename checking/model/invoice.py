@@ -124,7 +124,7 @@ class InvoiceEntry(meta.BaseObject):
             schema.ForeignKey(Currency.id, onupdate="RESTRICT", ondelete="RESTRICT"),
             nullable=False)
     currency = orm.relationship(Currency, lazy="joined")
-    unit_price = schema.Column(types.Numeric(precision=6, scale=2), nullable=False)
+    unit_price = schema.Column(types.Numeric(precision=7, scale=2), nullable=False)
     units = schema.Column(types.Numeric(4,2), nullable=False, default=1)
 
     @property
