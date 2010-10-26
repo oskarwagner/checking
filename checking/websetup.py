@@ -13,7 +13,8 @@ def populateDatabase():
         log.info("Adding initial admin user")
         admin=Account(login="admin", password="admin",
                 firstname=u"Admin", surname=u"Admin",
-                email="discard@simplon.biz")
+                email="discard@simplon.biz",
+		company=u"Simplon B.V.")
         session.add(admin)
 
     from checking.model.currency import Currency
