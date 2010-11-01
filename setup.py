@@ -23,8 +23,13 @@ setup(name="checking",
       include_package_data=True,
       zip_safe=False,
       test_suite="checking",
+      message_extractors = {"checking": [
+                    ("**.py", "chameleon_python", None),
+                    ("**.pt", "chameleon_xml", None),
+                    ]},
       install_requires = [
           "repoze.bfg",
+          "translationstring >=0.3",
           "SQLAlchemy >=0.6beta3",
           "transaction",
           "repoze.tm2",

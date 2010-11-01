@@ -122,6 +122,11 @@ def setupChameleon(config):
     
 
 
+def setupi18n(config):
+    config.add_translation_dirs("checking:locale/")
+
+
+
 def app(global_config, **settings):
     """ This function returns a WSGI application.
     
@@ -145,6 +150,7 @@ def app(global_config, **settings):
     setupSqlalchemy(settings)
     setupRoutes(config)
     setupChameleon(config)
+    setupi18n(config)
     config.end()
 
     app = config.make_wsgi_app()

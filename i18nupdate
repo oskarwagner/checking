@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+../../bin/py setup.py extract_messages
+../../bin/py setup.py update_catalog
+../../bin/py setup.py compile_catalog
+
