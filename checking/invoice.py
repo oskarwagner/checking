@@ -5,7 +5,6 @@ import formish
 import schemaish
 from sqlalchemy import orm
 from repoze.bfg.exceptions import Forbidden
-from repoze.bfg.view import bfg_view
 from repoze.bfg.url import route_url
 from checking.authentication import currentUser
 from checking.utils import SimpleTypeFactory
@@ -302,7 +301,6 @@ def Comment(context, request):
 
 
 
-@bfg_view(route_name="invoice_print", permission="view")
 def Print(context, request):
     from z3c.rml.document import Document
     from repoze.bfg.renderers import render

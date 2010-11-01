@@ -77,7 +77,8 @@ def setupRoutes(config):
             factory=factory, view=resolve("checking.invoice:View"),
             permission="view")
     config.add_route("invoice_print", path="/invoices/:id/print",
-            factory=factory)
+            factory=factory, view=resolve("checking.invoice:Print"),
+            permission="view")
     config.add_route("invoice_comment", path="/invoices/:id/add-comment",
             factory=factory, view=resolve("checking.invoice:Comment"),
             permission="comment")
@@ -144,7 +145,6 @@ def app(global_config, **settings):
     setupSqlalchemy(settings)
     setupRoutes(config)
     setupChameleon(config)
-    config.scan()
     config.end()
 
     app = config.make_wsgi_app()
