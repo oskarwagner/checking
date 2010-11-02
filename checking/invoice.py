@@ -36,6 +36,7 @@ class InvoiceSchema(schemaish.Structure):
     payment_term = schemaish.Integer(validator=validator.All(
         validator.Required(),
         validator.Range(min=1)))
+    note = schemaish.String()
     entries = schemaish.Sequence(attr=InvoiceEntrySchema())
 
 
@@ -118,6 +119,7 @@ class Edit(object):
                 .filter(Currency.until==None).all())
 
         self.context.payment_term=data["payment_term"]
+        self.context.note=data["note"]
 
         current=dict([(entry.id, entry) for entry in self.context.entries])
         for (position,entry) in enumerate(data["entries"]):
@@ -315,7 +317,7 @@ def Print(context, request):
     output.seek(0)
     response=Response(output.read())
     response.content_type="application/pdf"
-    response.headers.add("Content-Disposition", "attachment; filename=%s.pdf" % context.number)
+    response.headers.add("Content-Disposition", "attachment; filename=%s.pdf" % (context.number or "draft"))
     return response
 
 

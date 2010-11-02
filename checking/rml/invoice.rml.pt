@@ -1,5 +1,4 @@
-<document filename="test_001_hello.pdf" invariant="1">
-
+<document filename="test_001_hello.pdf" invariant="1" tal:define="has_vat bool(context.VAT())">
   <template pageSize="a4" showBoundary="0">
     <pageTemplate id="main" pageSize="a4 portrait">
       <pageGraphics>
@@ -29,7 +28,8 @@
         <lines>400 749 523 749</lines>
 
         <place x="400" y="641" height="89" width="123">
-          <para>Factuurnummer: ${context.number}</para>
+          <para tal:condition="context.number">Factuurnummer: ${context.number}</para>
+          <para tal:condition="not context.number">Factuurnummer: draft</para>
           <para tal:condition="context.sent">${formatter.date(context.sent, format='long')}</para>
           <para tal:condition="context.note">${context.note}</para>
         </place>
@@ -65,9 +65,16 @@
       <lineStyle kind="LINEBELOW" colorName="black" thickness="1" start="0,0" stop="-1,0"/>
       <blockFont name="Helvetica-Bold" start="0,0" stop="-1,0"/>
       <!-- Style the last rows (with totals) -->
-      <lineStyle kind="LINEABOVE" colorName="black" thickness="1" start="-2,-3" stop="-1,-3"/>
-      <blockFont name="Helvetica-Bold" start="0,-3" stop="-1,-1"/>
-      <blockAlignment value="RIGHT" start="-3,-3" stop="-3,-1"/>
+      <tal:block condition="has_vat">
+        <lineStyle kind="LINEABOVE" colorName="black" thickness="1" start="-2,-3" stop="-1,-3"/>
+        <blockFont name="Helvetica-Bold" start="0,-3" stop="-1,-1"/>
+        <blockAlignment value="RIGHT" start="-3,-3" stop="-3,-1"/>
+      </tal:block>
+      <tal:block condition="not has_vat">
+        <blockFont name="Helvetica-Bold" start="0,-1" stop="-1,-1"/>
+        <blockAlignment value="RIGHT" start="-3,-1" stop="-3,-1"/>
+      </tal:block>
+      <lineStyle kind="LINEABOVE" colorName="black" thickness="1" start="-2,-1" stop="-1,-1"/>
     </blockTableStyle>
   </stylesheet>
 
@@ -93,19 +100,19 @@
         <td>${entry.currency.code}</td>
         <td>${formatter.decimal(entry.unit_price*entry.units, format=decimal_format)}</td>
       </tr>
-      <tr>
+      <tr tal:condition="has_vat">
         <td></td>
         <td></td>
         <td>Subtotaal</td>
         <td>EUR</td>
         <td>${formatter.decimal(context.total('gross'), format=decimal_format)}</td>
       </tr>
-      <tr tal:repeat="vat context.VAT()">
+      <tr tal:repeat="vat_entry context.VAT()">
         <td></td>
         <td></td>
-        <td>${vat[0]}% BTW</td>
+        <td>${vat_entry[0]}% BTW</td>
         <td>EUR</td>
-        <td>${formatter.decimal(vat[1], format=decimal_format)}</td>
+        <td>${formatter.decimal(vat_entry[1], format=decimal_format)}</td>
       </tr>
       <tr>
         <td></td>

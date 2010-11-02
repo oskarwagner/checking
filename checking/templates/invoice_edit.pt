@@ -18,7 +18,10 @@
         <fieldset class="concise">
           <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
           <label tal:define="field form.get_field('payment_term')">Payment term <sup class="required">*</sup>
-            <input type="text" size="4" maxlength="2" name="payment_term" value="${field.value[0]}"/> <em
+            <input type="text" size="4" maxlength="2" name="${field.name}" value="${field.value[0]}"/> <em
+              class="message warning" tal:condition="field.error">${field.error}</em></label>
+          <label tal:define="field form.get_field('note')">Reference/note
+            <textarea name="${field.name}">${field.value[0]}</textarea> <em
               class="message warning" tal:condition="field.error">${field.error}</em></label>
         </fieldset>
 
