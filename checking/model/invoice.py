@@ -61,6 +61,8 @@ class Invoice(meta.BaseObject):
     def VAT(self):
         totals={}
         for entry in self.entries:
+            if not entry.vat:
+                continue
             current=entry.total
             totals[entry.vat]=totals.get(entry.vat, 0)+current
         for (vat, total) in totals.items():

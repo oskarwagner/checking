@@ -38,13 +38,13 @@
         </tal:block>
       </dl>
 
-      <table>
+      <table tal:define="vat context.VAT()">
         <thead>
           <tr>
             <th>Description</th>
             <th>Unit price</th>
             <th>Units</th>
-            <th>VAT</th>
+            <th tal:condition="vat">VAT</th>
             <th>Price</th>
           </tr>
         </thead>
@@ -53,30 +53,30 @@
             <td>${entry.description}</td>
             <td>${formatter.currency(entry.unit_price, entry.currency.code)}</td>
             <td>${formatter.number(entry.units)}</td>
-            <td>${entry.vat}%</td>
+            <td tal:condition="vat">${entry.vat}%</td>
             <td>${formatter.currency(entry.unit_price*entry.units, entry.currency.code)}</td>
           </tr>
         </tbody>
         <tfoot>
-          <tr tal:define="gross context.total('gross')" tal:condition="gross">
+          <tr tal:define="gross context.total('gross')" tal:condition="gross and vat">
             <th>Total</th>
             <th></th>
             <th></th>
             <th></th>
             <th class="currency">${formatter.currency(gross, 'EUR')}</th>
           </tr>
-          <tr tal:repeat="vat context.VAT()">
-            <th>${vat[0]}% VAT</th>
+          <tr tal:repeat="vat_entry vat">
+            <th>${vat_entry[0]}% VAT</th>
             <th></th>
             <th></th>
             <th></th>
-            <th class="currency">${formatter.currency(vat[1], 'EUR')}</th>
+            <th class="currency">${formatter.currency(vat_entry[1], 'EUR')}</th>
           </tr>
           <tr>
             <th>Grand total</th>
             <th></th>
             <th></th>
-            <th></th>
+            <th tal:condition="vat"></th>
             <th class="currency">${formatter.currency(context.total('net'), 'EUR')}</th>
           </tr>
         </tfoot>
