@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      i18n:domain="s4u.admin"
+      i18n:domain="checking"
       metal:use-macro="layout">
   <head>
     <metal:title fill-slot="title" i18n:name="">Profile</metal:title>

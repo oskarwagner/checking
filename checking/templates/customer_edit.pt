@@ -1,23 +1,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
+      i18n:domain="checking"
       metal:use-macro="layout">
   <head>
     <metal:title fill-slot="title">
-      <tal:span condition="context is None">Add Customer</tal:span>
-      <tal:span condition="context is not None">${context.title} — Customers</tal:span>
+      <tal:span condition="context is None" i18n:translate="">Add Customer</tal:span>
+      <tal:span condition="context is not None" i18n:translate="">${context.title} — Customers</tal:span>
     </metal:title>
   </head>
   <body>
     <metal:content fill-slot="content">
-      <h1 tal:condition="context is None">Add new customer</h1>
-      <h1 tal:condition="context is not None">Modify “${context.title}”</h1>
+      <h1 tal:condition="context is None" i18n:translate="">Add new customer</h1>
+      <h1 tal:condition="context is not None" i18n:translate="">Modify “${context.title}”</h1>
 
       <form class="concise" method="post" action="${action_url}" tal:define="form view.form">
         <fieldset>
-          <legend>General information</legend>
+          <legend i18n:translate="">General information</legend>
           <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
           <label tal:define="field form.get_field('title')">Title <sup class="required">*</sup>
             <input class="autofocus span-5" type="text" maxlength="128" name="title" value="${field.value[0]}" /> <em

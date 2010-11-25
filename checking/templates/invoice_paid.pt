@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="layout"
+      tal:define="">
+  <head>
+    <metal:title fill-slot="title">
+     Invoice Payment — ${context.customer.title} — Customers
+    </metal:title>
+  </head>
+  <body>
+    <metal:content fill-slot="content">
+      <form id="form" method="POST" action="${action_url}" tal:define="form view.form">
+        <h1>Send invoice</h1>
+
+        <p class="message notice">Please note that marking an invoice as paid
+        can not be undone.</p>
+
+        <fieldset class="comprehensive date-eu" tal:define="field form.get_field('paid')">
+          <legend>Payment date<sup class="required">*</sup></legend>
+          <label for="paid-day">Day</label>
+          <input id="paid-day" name="paid.day" type="text" value="${field.value['day.0']}" maxlength="2" class="day"/>
+          <label for="paid-month">Month</label>
+          <select name="paid.month" class="month" tal:define="value str(field.value['month.0'])">
+            <option tal:repeat="month range(1,13)"
+            value="${month}" selected="${'selected' if str(month)==value else None}">${locale.months['stand-alone']['wide'][month]}</option>
+          </select>
+          <label for="paid-year">Year</label>
+          <input id="paid-year" name="paid.year" type="text" value="${field.value['year.0']}" maxlength="4" class="year"/>
+        </fieldset>
+
+        <div class="buttonBar">
+          <input type="hidden" name="csrf_token" value="${tools.csrf_token}"/>
+          <button type="submit" name="action" value="confirm" class="defaultButton">Save</button>
+          <button type="submit" name="action" value="cancel" class="cancelButton">Cancel</button>
+        </div>
+      </form>
+    </metal:content>
+  </body>
+</html>
+
