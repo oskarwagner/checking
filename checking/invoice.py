@@ -140,7 +140,7 @@ class Edit(object):
             c.vat=entry["vat"]
 
         for entry in current.values():
-            session.remove(entry)
+            session.delete(entry)
 
         return True
 
