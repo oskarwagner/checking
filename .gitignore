@@ -5,4 +5,4 @@
 /develop-eggs
 /eggs
 /.installed.cfg
-/checking.egg-info
+/src/checking.egg-info
