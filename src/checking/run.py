@@ -127,7 +127,7 @@ def setupi18n(config):
 
 
 
-def app(global_config, **settings):
+def main(global_config, **settings):
     """ This function returns a WSGI application.
     
     It is usually called by the PasteDeploy framework during 
@@ -157,6 +157,3 @@ def app(global_config, **settings):
     app = TM(app)
 
     return app
-
-
-

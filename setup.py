@@ -46,7 +46,7 @@ setup(name="checking",
           ],
       entry_points = """\
       [paste.app_factory]
-      app = checking.run:app
+      main = checking.run:main
 
       [paste.app_install]
       app = paste.script.appinstall:Installer
