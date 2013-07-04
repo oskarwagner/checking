@@ -29,7 +29,7 @@ class InvoiceEntrySchema(schemaish.Structure):
     unit_price = schemaish.Decimal(validator=validator.Required())
     units = schemaish.Decimal(validator=validator.All(
         validator.Required(),
-        validator.Range(min=1)))
+        validator.Range(min=0.1)))
 
 
 class InvoiceSchema(schemaish.Structure):
